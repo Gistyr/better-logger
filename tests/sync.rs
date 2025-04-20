@@ -17,7 +17,7 @@ fn test_six() {
         async_logging: false,
     };
 
-    logger::init(log_settings);
+    init(log_settings);
 
     let debug: &str = "DEBUG";
     let debugx: String = format!("DEBUGX");

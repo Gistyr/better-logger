@@ -7,11 +7,11 @@ authors = ["Gistyr LLC <contact@gistyr.dev>"]
 description = "Flexible sync/async logger with console and file output"
 readme = "README.md"
 license = "MIT OR Apache-2.0"
-repository     = "add"
-homepage       = "add"
-documentation  = "add"
-keywords       = ["logging", "async", "sync", "env_logger", "file", "console", "log", "write", "flexible"]
-categories     = ["development-tools::logging", "asynchronous"]
+repository = "add"
+homepage = "add"
+documentation = "add"
+keywords = ["logging", "async", "sync", "env_logger", "file", "console", "log", "write", "flexible"]
+categories = ["development-tools::logging", "asynchronous"]
 exclude = ["tests/logs/*.log"]
 
 [dependencies]
