@@ -95,6 +95,6 @@ pub mod settings;
 pub mod logger;
 
 pub(crate) mod core;
-pub(crate) mod aux;
+pub(crate) mod auxiliary;
 
 pub use settings::Settings as LoggerSettings;

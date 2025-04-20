@@ -9,7 +9,7 @@ pub use crate::error;
 
 #[doc(hidden)]
 pub fn is_async() -> bool {
-    if crate::aux::running_settings::ASYNC_LOGGING.load(std::sync::atomic::Ordering::Relaxed) == true {
+    if crate::auxiliary::running_settings::ASYNC_LOGGING.load(std::sync::atomic::Ordering::Relaxed) == true {
         return true;
     }
     else {
@@ -19,8 +19,8 @@ pub fn is_async() -> bool {
 
 #[doc(hidden)]
 pub fn debug_extra_enabled() -> bool {
-    let running_settings: &crate::aux::running_settings::RunningSettings = {
-        match crate::aux::running_settings::RUNNING_SETTINGS.get() {
+    let running_settings: &crate::auxiliary::running_settings::RunningSettings = {
+        match crate::auxiliary::running_settings::RUNNING_SETTINGS.get() {
             Some(settings) => {
                 settings
             },
@@ -84,9 +84,9 @@ pub fn init(settings: crate::settings::Settings) {
             }
         }
 
-        match crate::aux::file_operations::create_file(&settings.log_file_path) {
+        match crate::auxiliary::file_operations::create_file(&settings.log_file_path) {
             Ok(file) => {
-                match crate::aux::running_settings::LOG_FILE.set(std::sync::Mutex::new(file)) {
+                match crate::auxiliary::running_settings::LOG_FILE.set(std::sync::Mutex::new(file)) {
                     Ok(_ok) => {},
                     Err(_error) => {
                         eprintln!(r#"better-logger: Log file has already been initialized as a mutex."#);
@@ -102,10 +102,10 @@ pub fn init(settings: crate::settings::Settings) {
     }
 
     if settings.async_logging == true {
-        crate::aux::running_settings::ASYNC_LOGGING.store(true, std::sync::atomic::Ordering::Relaxed);
+        crate::auxiliary::running_settings::ASYNC_LOGGING.store(true, std::sync::atomic::Ordering::Relaxed);
     }
 
-    let running_settings: crate::aux::running_settings::RunningSettings = crate::aux::running_settings::RunningSettings {
+    let running_settings: crate::auxiliary::running_settings::RunningSettings = crate::auxiliary::running_settings::RunningSettings {
         terminal_logs: settings.terminal_logs,
         terminal_log_lvl: settings.terminal_log_lvl,
         file_logs: settings.file_logs,
@@ -113,7 +113,7 @@ pub fn init(settings: crate::settings::Settings) {
         debug_extra: settings.debug_extra,
     };
 
-    match crate::aux::running_settings::RUNNING_SETTINGS.set(running_settings) {
+    match crate::auxiliary::running_settings::RUNNING_SETTINGS.set(running_settings) {
         Ok(_ok) => {},
         Err(_error) => {
             eprintln!(r#"better-logger: Running settings have already been initialized as a mutex."#);

@@ -1,7 +1,7 @@
-[2025-04-20T21:44:08Z TRACE better_logger::core::log] Test Six: TRACE and above, terminal and file
-[2025-04-20T21:44:08Z TRACE better_logger::core::log] TRACE: sync Test Six
-[2025-04-20T21:44:08Z DEBUG better_logger::core::log] DEBUG: async Test Six
-[2025-04-20T21:44:08Z DEBUG better_logger::core::log] DEBUGX: async Test Six
-[2025-04-20T21:44:08Z INFO better_logger::core::log] INFO: sync Test Six
-[2025-04-20T21:44:08Z WARN better_logger::core::log] WARN: sync Test Six
-[2025-04-20T21:44:08Z ERROR better_logger::core::log] ERROR: sync Test Six
+[2025-04-20T23:27:44Z TRACE better_logger::core::log] Test Six: TRACE and above, terminal and file
+[2025-04-20T23:27:44Z TRACE better_logger::core::log] TRACE: sync Test Six
+[2025-04-20T23:27:44Z DEBUG better_logger::core::log] DEBUG: async Test Six
+[2025-04-20T23:27:44Z DEBUG better_logger::core::log] DEBUGX: async Test Six
+[2025-04-20T23:27:44Z INFO better_logger::core::log] INFO: sync Test Six
+[2025-04-20T23:27:44Z WARN better_logger::core::log] WARN: sync Test Six
+[2025-04-20T23:27:44Z ERROR better_logger::core::log] ERROR: sync Test Six

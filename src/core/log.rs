@@ -1,8 +1,8 @@
 // better-logger/src/core/log.rs
 
 pub(crate) fn log_async(level: &str, msg: &str) {
-    let running_settings: &crate::aux::running_settings::RunningSettings = {
-        match crate::aux::running_settings::RUNNING_SETTINGS.get() {
+    let running_settings: &crate::auxiliary::running_settings::RunningSettings = {
+        match crate::auxiliary::running_settings::RUNNING_SETTINGS.get() {
             Some(settings) => {
                 settings
             },
@@ -110,27 +110,27 @@ pub(crate) fn log_async(level: &str, msg: &str) {
             if file_requested_message_level >= file_current_settings {
                 match given_message_level_two.as_str() {
                     "trace" => {
-                        if let Err(error) = crate::aux::file_operations::write_log_line("TRACE", module_path!(), &given_message_two) {
+                        if let Err(error) = crate::auxiliary::file_operations::write_log_line("TRACE", module_path!(), &given_message_two) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
                     },
                     "debug" => {
-                        if let Err(error) = crate::aux::file_operations::write_log_line("DEBUG", module_path!(), &given_message_two) {
+                        if let Err(error) = crate::auxiliary::file_operations::write_log_line("DEBUG", module_path!(), &given_message_two) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
                     },
                     "info" => {
-                        if let Err(error) = crate::aux::file_operations::write_log_line("INFO", module_path!(), &given_message_two) {
+                        if let Err(error) = crate::auxiliary::file_operations::write_log_line("INFO", module_path!(), &given_message_two) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
                     },
                     "warn" => {
-                        if let Err(error) = crate::aux::file_operations::write_log_line("WARN", module_path!(), &given_message_two) {
+                        if let Err(error) = crate::auxiliary::file_operations::write_log_line("WARN", module_path!(), &given_message_two) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
                     },
                     "error" => {
-                        if let Err(error) = crate::aux::file_operations::write_log_line("ERROR", module_path!(), &given_message_two) {
+                        if let Err(error) = crate::auxiliary::file_operations::write_log_line("ERROR", module_path!(), &given_message_two) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
                     },
@@ -145,8 +145,8 @@ pub(crate) fn log_async(level: &str, msg: &str) {
 }
 
 pub(crate) fn log_sync(level: &str, msg: &str) {
-    let running_settings: &crate::aux::running_settings::RunningSettings = {
-        match crate::aux::running_settings::RUNNING_SETTINGS.get() {
+    let running_settings: &crate::auxiliary::running_settings::RunningSettings = {
+        match crate::auxiliary::running_settings::RUNNING_SETTINGS.get() {
             Some(settings) => {
                 settings
             },
@@ -243,27 +243,27 @@ pub(crate) fn log_sync(level: &str, msg: &str) {
         if file_requested_message_level >= file_current_settings {
             match level {
                 "trace" => {
-                    if let Err(error) = crate::aux::file_operations::write_log_line("TRACE", module_path!(), &msg) {
+                    if let Err(error) = crate::auxiliary::file_operations::write_log_line("TRACE", module_path!(), &msg) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
                 },
                 "debug" => {
-                    if let Err(error) = crate::aux::file_operations::write_log_line("DEBUG", module_path!(), &msg) {
+                    if let Err(error) = crate::auxiliary::file_operations::write_log_line("DEBUG", module_path!(), &msg) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
                 },
                 "info" => {
-                    if let Err(error) = crate::aux::file_operations::write_log_line("INFO", module_path!(), &msg) {
+                    if let Err(error) = crate::auxiliary::file_operations::write_log_line("INFO", module_path!(), &msg) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
                 },
                 "warn" => {
-                    if let Err(error) = crate::aux::file_operations::write_log_line("WARN", module_path!(), &msg) {
+                    if let Err(error) = crate::auxiliary::file_operations::write_log_line("WARN", module_path!(), &msg) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
                 },
                 "error" => {
-                    if let Err(error) = crate::aux::file_operations::write_log_line("ERROR", module_path!(), &msg) {
+                    if let Err(error) = crate::auxiliary::file_operations::write_log_line("ERROR", module_path!(), &msg) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
                 },
