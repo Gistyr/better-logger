@@ -1,0 +1,22 @@
+[package]
+name = "better-logger"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85.1"
+authors = ["Gistyr LLC <contact@gistyr.dev>"]
+description = "Flexible sync/async logger with console and file output"
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+repository     = "add"
+homepage       = "add"
+documentation  = "add"
+keywords       = ["logging", "async", "sync", "env_logger", "file", "console", "log", "write", "flexible"]
+categories     = ["development-tools::logging", "asynchronous"]
+exclude = ["tests/logs/*.log"]
+
+[dependencies]
+env_logger = { version = "0.11.8", default-features = false, features = ["auto-color", "humantime"] }
+tokio = { version = "1.44.2", default-features = false, features = ["rt", "macros", "time"] }
+chrono = { version = "0.4.40", default-features = false, features = ["clock", "std"] }
+log = "0.4.27"
+once_cell = "1.21.3"

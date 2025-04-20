@@ -1,0 +1,4 @@
+[2025-04-20T21:44:03Z INFO better_logger::core::log] Test Five: INFO and above for file
+[2025-04-20T21:44:03Z INFO better_logger::core::log] INFO: async Test Five
+[2025-04-20T21:44:03Z WARN better_logger::core::log] WARN: async Test Five
+[2025-04-20T21:44:03Z ERROR better_logger::core::log] ERROR: async Test Five
