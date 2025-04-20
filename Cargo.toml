@@ -10,7 +10,7 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/Gistyr/better-logger"
 homepage = "https://github.com/Gistyr/better-logger"
 documentation = "https://docs.rs/better-logger"   
-keywords = ["logging", "async", "sync", "env_logger", "file", "console", "log", "write", "flexible"]
+keywords = ["logging", "async", "file", "console", "log"]
 categories = ["development-tools::logging", "asynchronous"]
 exclude = ["tests/logs/*.log"]
 
