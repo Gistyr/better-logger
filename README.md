@@ -26,16 +26,16 @@ fn main() {
 use better_logger::logger::*;
 
 fn my_function() {
-    let debug: &str = "DEBUG";
-    let debugx: String = format!("DEBUGX");
-    let error: &str = r#"ERROR"#;
+    let debug_msg: &str = "world";
+    let debugx_msg: String = format!(", world");
+    let error: &str = r#""failed""#;
 
-    trace!("TRACE: hello");
-    debug!("{}: world", debug);
-    debugx!("{}: hello", debugx);
-    info!("INFO: world");
-    warn!("WARN: hello");
-    error!(r#"{}: "world""#, error);
+    trace!("hello");
+    debug!("{}", debug_msg);
+    debugx!("hello{}", debugx_msg);
+    info!("hello message");
+    warn!("world message");
+    error!(r#""hello" "world" {}"#, error);
 }
 ```
 | SETTING             | DESCRIPTION               | 
@@ -45,7 +45,7 @@ fn my_function() {
 | `file_logs`         | Log to file               |
 | `file_log_lvl`      | Minimum level to write    |
 | `log_file_path`     | Path to log file          |
-| `debug_extra`       | show `debugx!` logs       |
+| `debug_extra`       | Show `debugx!` logs       |
 | `async_logging`     | Enable async logging      |
 # INFORMATION
 - Console logging uses [env_logger](https://crates.io/crates/env_logger)
@@ -56,6 +56,8 @@ fn my_function() {
 - Async logging uses a “fire and forget” model:
     - It spawns a new async task on the current Tokio runtime for each message
 - All macros use format! under the hood, any string-like type is accepted
+- Log messages routed through [env_logger](https://crates.io/crates/env_logger) are not written to the file
+    - Only messages emitted via better-logger are persisted to the log file
 #### Settings Alternate Namespace
 *Same exact settings, just a semantic difference*
 ```
