@@ -1,0 +1,8 @@
+[build]
+target = "tests/wasm_environment/index.html"
+dist = "tests/wasm_environment/dist" 
+features = ["testing"]
+
+[serve]
+addresses = ["127.0.0.1"]
+port = 8080

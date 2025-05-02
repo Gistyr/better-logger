@@ -1,4 +1,4 @@
-// better-logger/tests/sync.rs
+// better-logger/tests/sync_native.rs
 
 // cargo test --features native test_six -- --nocapture
 // Each test has to be run individually
