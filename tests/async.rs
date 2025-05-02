@@ -1,15 +1,18 @@
 // better-logger/tests/async.rs
 
-// cargo test test_one -- --nocapture
+// cargo test --features native test_one -- --nocapture
 // Each test has to be run individually
-/*
+
 use better_logger::LoggerSettings;
+use better_logger::logger::*;
+use better_logger::logger;
 
 #[tokio::test]
 async fn test_one() {
     let log_settings = LoggerSettings {
         terminal_logs: true,
         terminal_log_lvl: "trace".to_string(),
+        wasm_logging: false,
         file_logs: true,
         file_log_lvl: "trace".to_string(),
         log_file_path: "tests/logs/test_one_async.log".to_string(),
@@ -17,7 +20,10 @@ async fn test_one() {
         async_logging: true,
     };
 
-    logger::init(log_settings);
+    if let Err(error) = init(log_settings) {
+        eprintln!("{:?}", error);
+        std::process::exit(1);
+    }
 
     let debug: &str = "DEBUG";
     let debugx: String = format!("DEBUGX");
@@ -31,14 +37,15 @@ async fn test_one() {
     warn!("WARN: async Test One");
     error!(r#"{}: async Test One"#, error);
 
-    tokio::time::sleep(std::time::Duration::from_millis(500)).await;
+    tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 }
 
 #[tokio::test]
 async fn test_two() {
-    let log_settings: Settings = Settings {
+    let log_settings = LoggerSettings {
         terminal_logs: true,
         terminal_log_lvl: "warn".to_string(),
+        wasm_logging: false,
         file_logs: true,
         file_log_lvl: "warn".to_string(),
         log_file_path: "tests/logs/test_two_async.log".to_string(),
@@ -46,7 +53,10 @@ async fn test_two() {
         async_logging: true,
     };
 
-    logger::init(log_settings);
+    if let Err(error) = init(log_settings) {
+        eprintln!("{:?}", error);
+        std::process::exit(1);
+    }
 
     let debug: &str = "DEBUG";
     let debugx: String = format!("DEBUGX");
@@ -60,7 +70,7 @@ async fn test_two() {
     logger::warn!("WARN: async Test Two");
     logger::error!(r#"{}: async Test Two"#, error);
 
-    tokio::time::sleep(std::time::Duration::from_millis(500)).await;
+    tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 }
 
 #[tokio::test]
@@ -68,6 +78,7 @@ async fn test_three() {
     let log_settings: LoggerSettings = LoggerSettings {
         terminal_logs: true,
         terminal_log_lvl: "debug".to_string(),
+        wasm_logging: false,
         file_logs: false,
         file_log_lvl: "debug".to_string(),
         log_file_path: "tests/logs/test_three_async.log".to_string(),
@@ -75,7 +86,10 @@ async fn test_three() {
         async_logging: true,
     };
 
-    logger::init(log_settings);
+    if let Err(error) = init(log_settings) {
+        eprintln!("{:?}", error);
+        std::process::exit(1);
+    }
 
     let debug: &str = "DEBUG";
     let debugx: String = format!("DEBUGX");
@@ -89,14 +103,15 @@ async fn test_three() {
     logger::warn!("WARN: async Test Three");
     logger::error!(r#"{}: async Test Three"#, error);
 
-    tokio::time::sleep(std::time::Duration::from_millis(500)).await;
+    tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 }
 
 #[tokio::test]
 async fn test_four() {
-    let log_settings: Settings = Settings {
+    let log_settings = LoggerSettings {
         terminal_logs: false,
         terminal_log_lvl: "error".to_string(),
+        wasm_logging: false,
         file_logs: true,
         file_log_lvl: "error".to_string(),
         log_file_path: "tests/logs/test_four_async.log".to_string(),
@@ -104,7 +119,10 @@ async fn test_four() {
         async_logging: true,
     };
 
-    logger::init(log_settings);
+    if let Err(error) = init(log_settings) {
+        eprintln!("{:?}", error);
+        std::process::exit(1);
+    }
 
     let debug: &str = "DEBUG";
     let debugx: String = format!("DEBUGX");
@@ -118,7 +136,7 @@ async fn test_four() {
     logger::warn!("WARN: async Test Four");
     logger::error!(r#"{}: async Test Four"#, error);
 
-    tokio::time::sleep(std::time::Duration::from_millis(500)).await;
+    tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 }
 
 #[tokio::test]
@@ -126,6 +144,7 @@ async fn test_five() {
     let log_settings: LoggerSettings = LoggerSettings {
         terminal_logs: true,
         terminal_log_lvl: "trace".to_string(),
+        wasm_logging: false,
         file_logs: true,
         file_log_lvl: "info".to_string(),
         log_file_path: "tests/logs/test_five_async.log".to_string(),
@@ -133,7 +152,10 @@ async fn test_five() {
         async_logging: true,
     };
 
-    logger::init(log_settings);
+    if let Err(error) = init(log_settings) {
+        eprintln!("{:?}", error);
+        std::process::exit(1);
+    }
 
     let debug: &str = "DEBUG";
     let debugx: String = format!("DEBUGX");
@@ -148,5 +170,5 @@ async fn test_five() {
     warn!("WARN: async Test Five");
     error!(r#"{}: async Test Five"#, error);
 
-    tokio::time::sleep(std::time::Duration::from_millis(500)).await;
-}*/
+    tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+}

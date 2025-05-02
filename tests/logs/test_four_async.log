@@ -1,0 +1,2 @@
+[2025-05-02T15:17:51Z ERROR better_logger::native::log] Test Four: ERROR and above, file only
+[2025-05-02T15:17:51Z ERROR better_logger::native::log] ERROR: async Test Four

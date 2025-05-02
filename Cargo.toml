@@ -29,3 +29,4 @@ native = ["log", "once_cell", "env_logger", "tokio", "chrono"]
 wasm = ["log", "once_cell", "wasm-logger", "web-sys", "wasm-bindgen-futures"]
 
 [dev-dependencies]
+tokio = { version = "1.44.2", default-features = false, features = ["rt","macros","time"] }
