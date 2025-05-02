@@ -1,33 +1,12 @@
 // better-logger/src/lib.rs
 
-pub mod logger;
+pub mod interface;
 
 pub(crate) mod shared;
 pub(crate) mod native;
 pub(crate) mod wasm;
 
-///0
-///1
-///2
-///3
-///4
-///5
-///6
-///7
-///8
-///9
-
-#[derive(Clone, Debug, PartialEq)]
-pub struct LoggerSettings {
-    pub terminal_logs: bool,
-    pub terminal_log_lvl: String,
-    pub wasm_logging: bool,
-    pub file_logs: bool,
-    pub file_log_lvl: String,
-    pub log_file_path: String,
-    pub debug_extra: bool,
-    pub async_logging: bool,
-}
+pub use interface::settings::LoggerSettings as LoggerSettings;
 
 ///0
 ///1
