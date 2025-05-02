@@ -34,7 +34,7 @@ pub(crate) fn native_log_async(level: &str, msg: &str) {
                     "warn" => 3,
                     "error" => 4,
                     _ => { 
-                        eprintln!(r#"better-logger (native_log_async): "terminal_current_settings" failed to match"#);
+                        eprintln!(r#"better-logger (native_log_async): "terminal_set_log_level" failed to match"#);
                         panic!();
                     }
                 }
@@ -48,7 +48,7 @@ pub(crate) fn native_log_async(level: &str, msg: &str) {
                     "warn" => 3,
                     "error" => 4,
                     _ => { 
-                        eprintln!(r#"better-logger (1): The "level" value passed to "logger_async" must match: "trace", "debug", "info", "warn", or "error". Adjust the public functions that call logger_async"#);
+                        eprintln!(r#"better-logger (1)(native_log_async): "given_message_level_one" failed to match"#);
                         panic!();
                     }
                 }
@@ -72,7 +72,7 @@ pub(crate) fn native_log_async(level: &str, msg: &str) {
                         log::error!("{}", given_message_one);
                     },
                     _ => { 
-                        eprintln!(r#"better-logger: "given_message_level_one" failed to match"#);
+                        eprintln!(r#"better-logger (2)(native_log_async): "given_message_level_one" failed to match"#);
                         panic!();
                     }
                 };
@@ -94,7 +94,7 @@ pub(crate) fn native_log_async(level: &str, msg: &str) {
                     "warn" => 3,
                     "error" => 4,
                     _ => { 
-                        eprintln!(r#"better-logger (1): The "file_log_lvl" setting must match: "trace", "debug", "info", "warn", or "error". This should have ben caught by the init() function"#);
+                        eprintln!(r#"better-logger (native_log_async): "file_set_log_level" failed to match"#);
                         panic!();
                     }
                 }
@@ -108,7 +108,7 @@ pub(crate) fn native_log_async(level: &str, msg: &str) {
                     "warn" => 3,
                     "error" => 4,
                     _ => { 
-                        eprintln!(r#"better-logger (2): The "level" value passed to "logger_async" must match: "trace", "debug", "info", "warn", or "error". Adjust the public functions that call logger_async"#);
+                        eprintln!(r#"better-logger (1)(native_log_async): "given_message_level_two" failed to match"#);
                         panic!();
                     }
                 }
@@ -142,7 +142,7 @@ pub(crate) fn native_log_async(level: &str, msg: &str) {
                         }
                     },
                     _ => { 
-                        eprintln!(r#"better-logger: "given_message_level_one" failed to match"#);
+                        eprintln!(r#"better-logger (2)(native_log_async): "given_message_level_two" failed to match"#);
                         panic!();
                     }
                 };
@@ -175,7 +175,7 @@ pub(crate) fn native_log_sync(level: &str, msg: &str) {
                 "warn" => 3,
                 "error" => 4,
                 _ => { 
-                    eprintln!(r#"better-logger (2): The "terminal_log_lvl" setting must match: "trace", "debug", "info", "warn", or "error". This should have ben caught by the init() function"#);
+                    eprintln!(r#"better-logger (native_log_sync): "running_settings.terminal_log_lvl" failed to match"#);
                     panic!();
                 }
             }
@@ -189,7 +189,7 @@ pub(crate) fn native_log_sync(level: &str, msg: &str) {
                 "warn" => 3,
                 "error" => 4,
                 _ => { 
-                    eprintln!(r#"better-logger (3): The "level" value passed to "logger_async" must match: "trace", "debug", "info", "warn", or "error". Adjust the public functions that call logger_async"#);
+                    eprintln!(r#"better-logger (1)(native_log_sync): "level" failed to match"#);
                     panic!();
                 }
             }
@@ -213,7 +213,7 @@ pub(crate) fn native_log_sync(level: &str, msg: &str) {
                     log::error!("{}", msg);
                 },
                 _ => { 
-                    eprintln!(r#"better-logger: "given_message_level_one" failed to match"#);
+                    eprintln!(r#"better-logger (2)(native_log_sync): "level" failed to match"#);
                     panic!();
                 }
             };
@@ -229,7 +229,7 @@ pub(crate) fn native_log_sync(level: &str, msg: &str) {
                 "warn" => 3,
                 "error" => 4,
                 _ => { 
-                    eprintln!(r#"better-logger (2): The "file_log_lvl" setting must match: "trace", "debug", "info", "warn", or "error". This should have ben caught by the init() function"#);
+                    eprintln!(r#"better-logger (native_log_sync): "running_settings.file_log_lvl" failed to match"#);
                     panic!();
                 }
             }
@@ -243,7 +243,7 @@ pub(crate) fn native_log_sync(level: &str, msg: &str) {
                 "warn" => 3,
                 "error" => 4,
                 _ => { 
-                    eprintln!(r#"better-logger (4): The "level" value passed to "logger_async" must match: "trace", "debug", "info", "warn", or "error". Adjust the public functions that call logger_async"#);
+                    eprintln!(r#"better-logger (3)(native_log_sync): "level" failed to match"#);
                     panic!();
                 }
             }
@@ -277,7 +277,7 @@ pub(crate) fn native_log_sync(level: &str, msg: &str) {
                     }
                 },
                 _ => { 
-                    eprintln!(r#"better-logger: "given_message_level_one" failed to match"#);
+                    eprintln!(r#"better-logger (4)(native_log_sync): "level" failed to match"#);
                     panic!();
                 }
             };

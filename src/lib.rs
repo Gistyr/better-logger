@@ -2,11 +2,12 @@
 
 pub mod interface;
 
-pub(crate) mod shared;
 pub(crate) mod native;
 pub(crate) mod wasm;
 
 pub use interface::settings::LoggerSettings as LoggerSettings;
+pub use interface::logger as logger;
+pub use interface::logger::init as init;
 
 ///0
 ///1
