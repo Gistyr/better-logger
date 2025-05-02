@@ -19,9 +19,22 @@ pub use interface::settings::LoggerSettings as LoggerSettings;
 ///8
 ///9
 
+use crate::interface::settings::RUNNING_SETTINGS;
+
+///0
+///1
+///2
+///3
+///4
+///5
+///6
+///7
+///8
+///9
+
 #[doc(hidden)]
 pub fn is_async() -> bool {
-    let running_settings = crate::auxiliary::running_settings::RUNNING_SETTINGS.get().unwrap();
+    let running_settings = RUNNING_SETTINGS.get().unwrap();
     if running_settings.async_logging == true {
         return true;
     }
@@ -33,25 +46,24 @@ pub fn is_async() -> bool {
 #[doc(hidden)]
 pub fn log_async(level: &str, msg: &str) {
     #[cfg(feature = "native")]
-    crate::core::log::native_log_async(level, msg);
+    crate::native::log::native_log_async(level, msg);
 
     #[cfg(feature = "wasm")]
-    crate::core::log::wasm_log_async(level, msg);
+    crate::wasm::log::wasm_log_async(level, msg);
 }
 
 #[doc(hidden)]
 pub fn log_sync(level: &str, msg: &str) {
     #[cfg(feature = "native")]
-    crate::core::log::native_log_sync(level, msg);
+    crate::native::log::native_log_sync(level, msg);
 
     #[cfg(feature = "wasm")]
-    crate::core::log::wasm_log_sync(level, msg);
+    crate::wasm::log::wasm_log_sync(level, msg);
 }
 
 #[doc(hidden)]
 pub fn debug_extra_enabled() -> bool {
-    let running_settings = crate::auxiliary::running_settings::RUNNING_SETTINGS.get().unwrap();
-
+    let running_settings = RUNNING_SETTINGS.get().unwrap();
     if running_settings.debug_extra == true {
         return true;
     }

@@ -1,5 +1,9 @@
-// better-logger/src/auxiliary/file_operations.rs
+// better-logger/src/native/file.rs
 
+#[cfg(feature = "native")]
+use crate::interface::settings::LOG_FILE;
+
+#[cfg(feature = "native")]
 pub(crate) fn create_file(path: &str) -> std::io::Result<std::fs::File> {
     let path: &std::path::Path = std::path::Path::new(path);
 
@@ -17,9 +21,10 @@ pub(crate) fn create_file(path: &str) -> std::io::Result<std::fs::File> {
     return Ok(file);    
 }
 
+#[cfg(feature = "native")]
 pub(crate) fn write_log_line(level: &str, target: &str, message: &str) -> std::io::Result<()> {
     let mutex_file: &std::sync::Mutex<std::fs::File> = {
-        match crate::auxiliary::running_settings::LOG_FILE.get() {
+        match LOG_FILE.get() {
             Some(file) => {
                 file
             }

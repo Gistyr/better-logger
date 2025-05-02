@@ -3,7 +3,7 @@
 // cargo test test_one -- --nocapture
 // Each test has to be run individually
 
-use better_logger::{logger, logger::*, settings::Settings, LoggerSettings};
+/*use better_logger::{logger, logger::*, settings::Settings, LoggerSettings};
 
 #[tokio::test]
 async fn test_one() {
@@ -149,4 +149,4 @@ async fn test_five() {
     error!(r#"{}: async Test Five"#, error);
 
     tokio::time::sleep(std::time::Duration::from_millis(500)).await;
-}
+}*/

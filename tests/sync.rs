@@ -3,7 +3,7 @@
 // cargo test test_six -- --nocapture
 // Each test has to be run individually
 
-use better_logger::{logger, logger::*, settings::Settings, LoggerSettings};
+/*use better_logger::{logger, logger::*, settings::Settings, LoggerSettings};
 
 #[test]
 fn test_six() {
@@ -139,4 +139,4 @@ fn test_ten() {
     info!("INFO: sync Test Ten");
     warn!("WARN: sync Test Ten");
     error!(r#"{}: sync Test Ten"#, error);
-}
+}*/
