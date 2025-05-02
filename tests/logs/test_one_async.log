@@ -1,7 +1,0 @@
-[2025-04-20T23:27:37Z TRACE better_logger::core::log] Test One: TRACE and above, terminal and file
-[2025-04-20T23:27:37Z TRACE better_logger::core::log] TRACE: async Test One
-[2025-04-20T23:27:37Z DEBUG better_logger::core::log] DEBUG: async Test One
-[2025-04-20T23:27:37Z DEBUG better_logger::core::log] DEBUGX: async Test One
-[2025-04-20T23:27:37Z INFO better_logger::core::log] INFO: async Test One
-[2025-04-20T23:27:37Z WARN better_logger::core::log] WARN: async Test One
-[2025-04-20T23:27:37Z ERROR better_logger::core::log] ERROR: async Test One

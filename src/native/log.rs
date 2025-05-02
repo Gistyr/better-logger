@@ -1,17 +1,24 @@
-// better-logger/src/core/log.rs
+// better-logger/src/native/log.rs
 
-pub(crate) fn log_async(level: &str, msg: &str) {
-    let running_settings: &crate::auxiliary::running_settings::RunningSettings = {
-        match crate::auxiliary::running_settings::RUNNING_SETTINGS.get() {
-            Some(settings) => {
-                settings
-            },
-            None => {
-                eprintln!(r#"better-logger (2): Running settings mutex was not initialized."#);
-                std::process::exit(1);
-            }
-        }
-    };
+#[cfg(feature = "native")]
+use crate::interface::settings::RUNNING_SETTINGS;
+#[cfg(feature = "native")]
+use super::file::write_log_line;
+
+///0
+///1
+///2
+///3
+///4
+///5
+///6
+///7
+///8
+///9
+
+#[cfg(feature = "native")]
+pub(crate) fn native_log_async(level: &str, msg: &str) {
+    let running_settings = RUNNING_SETTINGS.get().unwrap();
 
     if running_settings.terminal_logs == true {
         let terminal_set_log_level: String = running_settings.terminal_log_lvl.clone();
@@ -27,8 +34,8 @@ pub(crate) fn log_async(level: &str, msg: &str) {
                     "warn" => 3,
                     "error" => 4,
                     _ => { 
-                        eprintln!(r#"better-logger (1): The "terminal_log_lvl" setting must match: "trace", "debug", "info", "warn", or "error". This should have ben caught by the init() function"#);
-                        std::process::exit(1);
+                        eprintln!(r#"better-logger (native_log_async): "terminal_set_log_level" failed to match"#);
+                        panic!();
                     }
                 }
             };
@@ -41,8 +48,8 @@ pub(crate) fn log_async(level: &str, msg: &str) {
                     "warn" => 3,
                     "error" => 4,
                     _ => { 
-                        eprintln!(r#"better-logger (1): The "level" value passed to "logger_async" must match: "trace", "debug", "info", "warn", or "error". Adjust the public functions that call logger_async"#);
-                        std::process::exit(1);
+                        eprintln!(r#"better-logger (1)(native_log_async): "given_message_level_one" failed to match"#);
+                        panic!();
                     }
                 }
             };
@@ -65,8 +72,8 @@ pub(crate) fn log_async(level: &str, msg: &str) {
                         log::error!("{}", given_message_one);
                     },
                     _ => { 
-                        eprintln!(r#"better-logger: "given_message_level_one" failed to match"#);
-                        std::process::exit(1);
+                        eprintln!(r#"better-logger (2)(native_log_async): "given_message_level_one" failed to match"#);
+                        panic!();
                     }
                 };
             }
@@ -87,8 +94,8 @@ pub(crate) fn log_async(level: &str, msg: &str) {
                     "warn" => 3,
                     "error" => 4,
                     _ => { 
-                        eprintln!(r#"better-logger (1): The "file_log_lvl" setting must match: "trace", "debug", "info", "warn", or "error". This should have ben caught by the init() function"#);
-                        std::process::exit(1);
+                        eprintln!(r#"better-logger (native_log_async): "file_set_log_level" failed to match"#);
+                        panic!();
                     }
                 }
             };
@@ -101,8 +108,8 @@ pub(crate) fn log_async(level: &str, msg: &str) {
                     "warn" => 3,
                     "error" => 4,
                     _ => { 
-                        eprintln!(r#"better-logger (2): The "level" value passed to "logger_async" must match: "trace", "debug", "info", "warn", or "error". Adjust the public functions that call logger_async"#);
-                        std::process::exit(1);
+                        eprintln!(r#"better-logger (1)(native_log_async): "given_message_level_two" failed to match"#);
+                        panic!();
                     }
                 }
             };
@@ -110,33 +117,33 @@ pub(crate) fn log_async(level: &str, msg: &str) {
             if file_requested_message_level >= file_current_settings {
                 match given_message_level_two.as_str() {
                     "trace" => {
-                        if let Err(error) = crate::auxiliary::file_operations::write_log_line("TRACE", module_path!(), &given_message_two) {
+                        if let Err(error) = write_log_line("TRACE", module_path!(), &given_message_two) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
                     },
                     "debug" => {
-                        if let Err(error) = crate::auxiliary::file_operations::write_log_line("DEBUG", module_path!(), &given_message_two) {
+                        if let Err(error) = write_log_line("DEBUG", module_path!(), &given_message_two) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
                     },
                     "info" => {
-                        if let Err(error) = crate::auxiliary::file_operations::write_log_line("INFO", module_path!(), &given_message_two) {
+                        if let Err(error) = write_log_line("INFO", module_path!(), &given_message_two) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
                     },
                     "warn" => {
-                        if let Err(error) = crate::auxiliary::file_operations::write_log_line("WARN", module_path!(), &given_message_two) {
+                        if let Err(error) = write_log_line("WARN", module_path!(), &given_message_two) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
                     },
                     "error" => {
-                        if let Err(error) = crate::auxiliary::file_operations::write_log_line("ERROR", module_path!(), &given_message_two) {
+                        if let Err(error) = write_log_line("ERROR", module_path!(), &given_message_two) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
                     },
                     _ => { 
-                        eprintln!(r#"better-logger: "given_message_level_one" failed to match"#);
-                        std::process::exit(1);
+                        eprintln!(r#"better-logger (2)(native_log_async): "given_message_level_two" failed to match"#);
+                        panic!();
                     }
                 };
             }
@@ -144,18 +151,20 @@ pub(crate) fn log_async(level: &str, msg: &str) {
     }
 }
 
-pub(crate) fn log_sync(level: &str, msg: &str) {
-    let running_settings: &crate::auxiliary::running_settings::RunningSettings = {
-        match crate::auxiliary::running_settings::RUNNING_SETTINGS.get() {
-            Some(settings) => {
-                settings
-            },
-            None => {
-                eprintln!(r#"better-logger (3): Running settings mutex was not initialized."#);
-                std::process::exit(1);
-            }
-        }
-    };
+///0
+///1
+///2
+///3
+///4
+///5
+///6
+///7
+///8
+///9
+
+#[cfg(feature = "native")]
+pub(crate) fn native_log_sync(level: &str, msg: &str) {
+    let running_settings = RUNNING_SETTINGS.get().unwrap();
 
     if running_settings.terminal_logs == true {
         let terminal_current_settings: u8 = {
@@ -166,8 +175,8 @@ pub(crate) fn log_sync(level: &str, msg: &str) {
                 "warn" => 3,
                 "error" => 4,
                 _ => { 
-                    eprintln!(r#"better-logger (2): The "terminal_log_lvl" setting must match: "trace", "debug", "info", "warn", or "error". This should have ben caught by the init() function"#);
-                    std::process::exit(1);
+                    eprintln!(r#"better-logger (native_log_sync): "running_settings.terminal_log_lvl" failed to match"#);
+                    panic!();
                 }
             }
         };
@@ -180,8 +189,8 @@ pub(crate) fn log_sync(level: &str, msg: &str) {
                 "warn" => 3,
                 "error" => 4,
                 _ => { 
-                    eprintln!(r#"better-logger (3): The "level" value passed to "logger_async" must match: "trace", "debug", "info", "warn", or "error". Adjust the public functions that call logger_async"#);
-                    std::process::exit(1);
+                    eprintln!(r#"better-logger (1)(native_log_sync): "level" failed to match"#);
+                    panic!();
                 }
             }
         };
@@ -204,8 +213,8 @@ pub(crate) fn log_sync(level: &str, msg: &str) {
                     log::error!("{}", msg);
                 },
                 _ => { 
-                    eprintln!(r#"better-logger: "given_message_level_one" failed to match"#);
-                    std::process::exit(1);
+                    eprintln!(r#"better-logger (2)(native_log_sync): "level" failed to match"#);
+                    panic!();
                 }
             };
         }
@@ -220,8 +229,8 @@ pub(crate) fn log_sync(level: &str, msg: &str) {
                 "warn" => 3,
                 "error" => 4,
                 _ => { 
-                    eprintln!(r#"better-logger (2): The "file_log_lvl" setting must match: "trace", "debug", "info", "warn", or "error". This should have ben caught by the init() function"#);
-                    std::process::exit(1);
+                    eprintln!(r#"better-logger (native_log_sync): "running_settings.file_log_lvl" failed to match"#);
+                    panic!();
                 }
             }
         };
@@ -234,8 +243,8 @@ pub(crate) fn log_sync(level: &str, msg: &str) {
                 "warn" => 3,
                 "error" => 4,
                 _ => { 
-                    eprintln!(r#"better-logger (4): The "level" value passed to "logger_async" must match: "trace", "debug", "info", "warn", or "error". Adjust the public functions that call logger_async"#);
-                    std::process::exit(1);
+                    eprintln!(r#"better-logger (3)(native_log_sync): "level" failed to match"#);
+                    panic!();
                 }
             }
         };
@@ -243,33 +252,33 @@ pub(crate) fn log_sync(level: &str, msg: &str) {
         if file_requested_message_level >= file_current_settings {
             match level {
                 "trace" => {
-                    if let Err(error) = crate::auxiliary::file_operations::write_log_line("TRACE", module_path!(), &msg) {
+                    if let Err(error) = write_log_line("TRACE", module_path!(), &msg) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
                 },
                 "debug" => {
-                    if let Err(error) = crate::auxiliary::file_operations::write_log_line("DEBUG", module_path!(), &msg) {
+                    if let Err(error) = write_log_line("DEBUG", module_path!(), &msg) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
                 },
                 "info" => {
-                    if let Err(error) = crate::auxiliary::file_operations::write_log_line("INFO", module_path!(), &msg) {
+                    if let Err(error) = write_log_line("INFO", module_path!(), &msg) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
                 },
                 "warn" => {
-                    if let Err(error) = crate::auxiliary::file_operations::write_log_line("WARN", module_path!(), &msg) {
+                    if let Err(error) = write_log_line("WARN", module_path!(), &msg) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
                 },
                 "error" => {
-                    if let Err(error) = crate::auxiliary::file_operations::write_log_line("ERROR", module_path!(), &msg) {
+                    if let Err(error) = write_log_line("ERROR", module_path!(), &msg) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
                 },
                 _ => { 
-                    eprintln!(r#"better-logger: "given_message_level_one" failed to match"#);
-                    std::process::exit(1);
+                    eprintln!(r#"better-logger (4)(native_log_sync): "level" failed to match"#);
+                    panic!();
                 }
             };
         }

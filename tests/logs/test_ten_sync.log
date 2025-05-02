@@ -1,4 +1,0 @@
-[2025-04-20T21:44:28Z INFO better_logger::core::log] Test Ten: INFO and above for file
-[2025-04-20T21:44:28Z INFO better_logger::core::log] INFO: sync Test Ten
-[2025-04-20T21:44:28Z WARN better_logger::core::log] WARN: sync Test Ten
-[2025-04-20T21:44:28Z ERROR better_logger::core::log] ERROR: sync Test Ten

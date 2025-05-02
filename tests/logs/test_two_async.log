@@ -1,3 +1,0 @@
-[2025-04-20T21:43:47Z WARN better_logger::core::log] Test Two: WARN and above, terminal and file
-[2025-04-20T21:43:47Z WARN better_logger::core::log] WARN: async Test Two
-[2025-04-20T21:43:47Z ERROR better_logger::core::log] ERROR: async Test Two
