@@ -1,15 +1,18 @@
 // better-logger/tests/sync.rs
 
-// cargo test test_six -- --nocapture
+// cargo test --features native test_six -- --nocapture
 // Each test has to be run individually
 
-/*use better_logger::{logger, logger::*, settings::Settings, LoggerSettings};
+use better_logger::LoggerSettings;
+use better_logger::logger::*;
+use better_logger::logger;
 
 #[test]
 fn test_six() {
-    let log_settings: LoggerSettings = LoggerSettings {
+    let log_settings = LoggerSettings {
         terminal_logs: true,
         terminal_log_lvl: "trace".to_string(),
+        wasm_logging: false,
         file_logs: true,
         file_log_lvl: "trace".to_string(),
         log_file_path: "tests/logs/test_six_sync.log".to_string(),
@@ -17,7 +20,10 @@ fn test_six() {
         async_logging: false,
     };
 
-    init(log_settings);
+    if let Err(error) = init(log_settings) {
+        eprintln!("{:?}", error);
+        std::process::exit(1);
+    }
 
     let debug: &str = "DEBUG";
     let debugx: String = format!("DEBUGX");
@@ -34,9 +40,10 @@ fn test_six() {
 
 #[test]
 fn test_seven() {
-    let log_settings: Settings = Settings {
+    let log_settings = LoggerSettings {
         terminal_logs: true,
         terminal_log_lvl: "warn".to_string(),
+        wasm_logging: false,
         file_logs: true,
         file_log_lvl: "warn".to_string(),
         log_file_path: "tests/logs/test_seven_sync.log".to_string(),
@@ -44,7 +51,10 @@ fn test_seven() {
         async_logging: false,
     };
 
-    logger::init(log_settings);
+    if let Err(error) = init(log_settings) {
+        eprintln!("{:?}", error);
+        std::process::exit(1);
+    }
 
     let debug: &str = "DEBUG";
     let debugx: String = format!("DEBUGX");
@@ -64,6 +74,7 @@ fn test_eight() {
     let log_settings: LoggerSettings = LoggerSettings {
         terminal_logs: true,
         terminal_log_lvl: "debug".to_string(),
+        wasm_logging: false,
         file_logs: false,
         file_log_lvl: "debug".to_string(),
         log_file_path: "tests/logs/test_eight_sync.log".to_string(),
@@ -71,7 +82,10 @@ fn test_eight() {
         async_logging: false,
     };
 
-    logger::init(log_settings);
+    if let Err(error) = init(log_settings) {
+        eprintln!("{:?}", error);
+        std::process::exit(1);
+    }
 
     let debug: &str = "DEBUG";
     let debugx: String = format!("DEBUGX");
@@ -88,9 +102,10 @@ fn test_eight() {
 
 #[test]
 fn test_nine() {
-    let log_settings: Settings = Settings {
+    let log_settings = LoggerSettings {
         terminal_logs: false,
         terminal_log_lvl: "error".to_string(),
+        wasm_logging: false,
         file_logs: true,
         file_log_lvl: "error".to_string(),
         log_file_path: "tests/logs/test_nine_sync.log".to_string(),
@@ -98,7 +113,10 @@ fn test_nine() {
         async_logging: false,
     };
 
-    logger::init(log_settings);
+    if let Err(error) = init(log_settings) {
+        eprintln!("{:?}", error);
+        std::process::exit(1);
+    }
 
     let debug: &str = "DEBUG";
     let debugx: String = format!("DEBUGX");
@@ -115,9 +133,10 @@ fn test_nine() {
 
 #[test]
 fn test_ten() {
-    let log_settings: LoggerSettings = LoggerSettings {
+    let log_settings = LoggerSettings {
         terminal_logs: true,
         terminal_log_lvl: "trace".to_string(),
+        wasm_logging: false,
         file_logs: true,
         file_log_lvl: "info".to_string(),
         log_file_path: "tests/logs/test_ten_sync.log".to_string(),
@@ -125,7 +144,10 @@ fn test_ten() {
         async_logging: false,
     };
 
-    logger::init(log_settings);
+    if let Err(error) = init(log_settings) {
+        eprintln!("{:?}", error);
+        std::process::exit(1);
+    }
 
     let debug: &str = "DEBUG";
     let debugx: String = format!("DEBUGX");
@@ -139,4 +161,4 @@ fn test_ten() {
     info!("INFO: sync Test Ten");
     warn!("WARN: sync Test Ten");
     error!(r#"{}: sync Test Ten"#, error);
-}*/
+}

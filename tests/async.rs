@@ -2,12 +2,12 @@
 
 // cargo test test_one -- --nocapture
 // Each test has to be run individually
-
-/*use better_logger::{logger, logger::*, settings::Settings, LoggerSettings};
+/*
+use better_logger::LoggerSettings;
 
 #[tokio::test]
 async fn test_one() {
-    let log_settings: LoggerSettings = LoggerSettings {
+    let log_settings = LoggerSettings {
         terminal_logs: true,
         terminal_log_lvl: "trace".to_string(),
         file_logs: true,
