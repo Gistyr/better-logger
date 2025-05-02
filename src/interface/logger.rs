@@ -56,7 +56,7 @@ fn init_private(settings: LoggerSettings) -> Result<String, String> {
         }
         else {
             #[cfg(feature = "wasm")]
-            initialize_wasm_logger(settings.terminal_log_lvl.to_lowercase().as_str())?;
+            crate::wasm::auxiliary::initialize_wasm_logger(settings.terminal_log_lvl.to_lowercase().as_str())?;
         }
     }
 
@@ -85,35 +85,6 @@ fn init_private(settings: LoggerSettings) -> Result<String, String> {
         },
         Err(_error) => {
             return Err(format!(r#"better-logger: RUNNING_SETTINGS have already been initialized"#));
-        }
-    }
-}
-
-#[cfg(feature = "wasm")]
-fn initialize_wasm_logger(terminal_log_lvl: &str) -> Result<(), String> {
-    match terminal_log_lvl {
-        "trace" => {
-            wasm_logger::init(wasm_logger::Config::new(log::Level::Trace));
-            return Ok(());
-        },
-        "debug" => {
-            wasm_logger::init(wasm_logger::Config::new(log::Level::Debug));
-            return Ok(());
-        },
-        "info" => {
-            wasm_logger::init(wasm_logger::Config::new(log::Level::Info));
-            return Ok(());
-        },
-        "warn" => {
-            wasm_logger::init(wasm_logger::Config::new(log::Level::Warn));
-            return Ok(());
-        },
-        "error" => {
-            wasm_logger::init(wasm_logger::Config::new(log::Level::Error));
-            return Ok(());
-        },
-        _ => {
-            return Err(format!(r#"better-logger (wasm): The "terminal_log_lvl" setting must match: "trace", "debug", "info", "warn", or "error""#));
         }
     }
 }

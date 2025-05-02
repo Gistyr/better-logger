@@ -38,7 +38,7 @@ pub(crate) fn initialize_native_logger(terminal_log_lvl: &str) -> Result<(), Str
             return Ok(());
         },
         _ => {
-            return Err(format!(r#"better-logger (native): The "terminal_log_lvl" setting must match: "trace", "debug", "info", "warn", or "error""#));
+            return Err(format!(r#"better-logger (initialize_native_logger): The "terminal_log_lvl" setting must match: "trace", "debug", "info", "warn", or "error""#));
         }
     }
 }
@@ -69,7 +69,7 @@ pub(crate) fn initialize_file_logging(file_log_lvl: &str, log_file_path: &str) -
 
     match super::file::create_file(log_file_path) {
         Ok(file) => {
-            match crate::auxiliary::running_settings::LOG_FILE.set(std::sync::Mutex::new(file)) {
+            match LOG_FILE.set(std::sync::Mutex::new(file)) {
                 Ok(_ok) => {
                     return Ok(());
                 },
