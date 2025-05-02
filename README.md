@@ -6,6 +6,7 @@ use better_logger::LoggerSettings;
 let log_settings = LoggerSettings {
     terminal_logs: true,
     terminal_log_lvl: "trace".to_string(),
+    wasm_logging: false,
     file_logs: true,
     file_log_lvl: "error".to_string(),
     log_file_path: "/path/to/my/file.log".to_string(),
@@ -18,7 +19,10 @@ let log_settings = LoggerSettings {
 use better_logger::logger;
 
 fn main() {
-    logger::init(log_settings);
+    if let Err(error) = logger::init(log_settings) {
+        eprintln!("{:?}", error);
+        std::process::exit(1);
+    }
 }
 ```
 ## THREE: Log
@@ -42,6 +46,7 @@ fn my_function() {
 |---------------------|---------------------------|
 | `terminal_logs`     | Log to terminal           |
 | `terminal_log_lvl`  | Minimum level to display  |
+| `wasm_logging`      |   |
 | `file_logs`         | Log to file               |
 | `file_log_lvl`      | Minimum level to write    |
 | `log_file_path`     | Path to log file          |

@@ -4,8 +4,8 @@
 // Each test has to be run individually
 
 use better_logger::LoggerSettings;
-use better_logger::logger::*;
 use better_logger::logger;
+use better_logger::logger::*;
 
 #[test]
 fn test_six() {
@@ -20,7 +20,7 @@ fn test_six() {
         async_logging: false,
     };
 
-    if let Err(error) = init(log_settings) {
+    if let Err(error) = logger::init(log_settings) {
         eprintln!("{:?}", error);
         std::process::exit(1);
     }
@@ -29,13 +29,13 @@ fn test_six() {
     let debugx: String = format!("DEBUGX");
     let error: &str = r#"ERROR"#;
 
-    trace!("Test Six: TRACE and above, terminal and file");
-    trace!("TRACE: sync Test Six");
-    debug!("{}: async Test Six", debug);
-    debugx!("{}: async Test Six", debugx);
-    info!("INFO: sync Test Six");
-    warn!("WARN: sync Test Six");
-    error!(r#"{}: sync Test Six"#, error);
+    logger::trace!("Test Six: TRACE and above, terminal and file");
+    logger::trace!("TRACE: sync Test Six");
+    logger::debug!("{}: async Test Six", debug);
+    logger::debugx!("{}: async Test Six", debugx);
+    logger::info!("INFO: sync Test Six");
+    logger::warn!("WARN: sync Test Six");
+    logger::error!(r#"{}: sync Test Six"#, error);
 }
 
 #[test]
