@@ -1,8 +1,14 @@
 # HOW TO USE
-## ONE: Settings
+## ONE: Declare Feature
+```rust
+better-logger = { version = "1.0.0", features = ["native"] }
+better-logger = { version = "1.0.0", features = ["wasm"] }
+```
+## TWO: Settings
 ```rust
 use better_logger::LoggerSettings;
 
+// If using the native feature 
 let log_settings = LoggerSettings {
     terminal_logs: true,
     terminal_log_lvl: "trace".to_string(),
@@ -14,18 +20,18 @@ let log_settings = LoggerSettings {
     async_logging: false,
 };
 ```
-## TWO: Initialize
+## THREE: Initialize
 ```rust
 use better_logger::logger;
 
 fn main() {
-    if let Err(error) = logger::init(log_settings) {
+    if let Err(err) = logger::init(log_settings) {
         eprintln!("{:?}", error);
         std::process::exit(1);
     }
 }
 ```
-## THREE: Log
+## FOUR: Log
 ```rust
 use better_logger::logger::*;
 
@@ -46,15 +52,26 @@ fn my_function() {
 |---------------------|---------------------------|
 | `terminal_logs`     | Log to terminal           |
 | `terminal_log_lvl`  | Minimum level to display  |
-| `wasm_logging`      |   |
+| `wasm_logging`      | Log to dev tools console  | 
 | `file_logs`         | Log to file               |
 | `file_log_lvl`      | Minimum level to write    |
 | `log_file_path`     | Path to log file          |
 | `debug_extra`       | Show `debugx!` logs       |
 | `async_logging`     | Enable async logging      |
+# Rules
+**better-logger has no default feature:**     
+- Using both will fail
+
+**If using the wasm feature:**
+- wasm_logging must be true
+- file_logs must be false
+
+**If using the native feature**
+- wasm_logging must be false
 # INFORMATION
-- Console logging uses [env_logger](https://crates.io/crates/env_logger)
-- File logging uses the same format as the console logs
+- NATIVE console logging uses [env_logger](https://crates.io/crates/env_logger)
+- WASM console logging uses [wasm-logger](https://crates.io/crates/wasm-logger)
+- File logging uses the same format as the NATIVE console logs
 - `trace!` -> (`debug!`, `debugx!`) -> `info!` -> `warn!` -> `error!`
 - better-logger will automatically create the path and file if not already created
 - File logs are overwritten not appended
@@ -63,15 +80,8 @@ fn my_function() {
 - All macros use format! under the hood, any string-like type is accepted
 - Log messages routed through [env_logger](https://crates.io/crates/env_logger) are not written to the file
     - Only messages emitted via better-logger are persisted to the log file
-#### Settings Alternate Namespace
-*Same exact settings, just a semantic difference*
-```
-use better_logger::settings::Settings;
+#### Possible errors
 
-let log_settings = Settings {
-    /* Same as above */
-};
-```
 #### What is `DEBUGX`?
 It is just a second debug, the `debugx!()` logs will be labeled as `DEBUG` when they print
 #### Why would I want to use `DEBUGX`?
