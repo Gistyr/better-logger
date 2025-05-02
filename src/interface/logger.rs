@@ -13,7 +13,7 @@ pub use crate::{trace, debug, debugx, info, warn, error};
 ///8
 ///9
 
-use crate::interface::settings::LoggerSettings;
+use super::settings::{LoggerSettings, RunningSettings, RUNNING_SETTINGS};
 
 ///0
 ///1
@@ -48,11 +48,11 @@ pub fn init(settings: LoggerSettings) -> Result<String, String> {
 ///8
 ///9
 
-fn init_private(settings: crate::LoggerSettings) -> Result<String, String> {
+fn init_private(settings: LoggerSettings) -> Result<String, String> {
     if settings.terminal_logs == true {
         if settings.wasm_logging == false {
             #[cfg(feature = "native")]
-            initialize_native_logger(settings.terminal_log_lvl.to_lowercase().as_str())?;
+            crate::native::auxiliary::initialize_native_logger(settings.terminal_log_lvl.to_lowercase().as_str())?;
         }
         else {
             #[cfg(feature = "wasm")]
@@ -66,10 +66,10 @@ fn init_private(settings: crate::LoggerSettings) -> Result<String, String> {
         }
 
         #[cfg(feature = "native")]
-        initialize_file_logging(&settings.file_log_lvl.to_lowercase().as_str(), &settings.log_file_path)?;
+        crate::native::auxiliary::initialize_file_logging(&settings.file_log_lvl.to_lowercase().as_str(), &settings.log_file_path)?;
     }
 
-    let running_settings = crate::auxiliary::running_settings::RunningSettings {
+    let running_settings = RunningSettings {
         terminal_logs: settings.terminal_logs,
         terminal_log_lvl: settings.terminal_log_lvl,
         wasm_logging: settings.wasm_logging,
@@ -79,41 +79,12 @@ fn init_private(settings: crate::LoggerSettings) -> Result<String, String> {
         async_logging: settings.async_logging,
     };
 
-    match crate::auxiliary::running_settings::RUNNING_SETTINGS.set(running_settings) {
+    match RUNNING_SETTINGS.set(running_settings) {
         Ok(_ok) => {
             return Ok("better-logger initialized successfully".to_string());
         },
         Err(_error) => {
             return Err(format!(r#"better-logger: RUNNING_SETTINGS have already been initialized"#));
-        }
-    }
-}
-
-#[cfg(feature = "native")]
-fn initialize_native_logger(terminal_log_lvl: &str) -> Result<(), String> {
-    match terminal_log_lvl {
-        "trace" => {
-            env_logger::Builder::new().filter_level(log::LevelFilter::Trace).init();
-            return Ok(());
-        },
-        "debug" => {
-            env_logger::Builder::new().filter_level(log::LevelFilter::Debug).init();
-            return Ok(());
-        },
-        "info" => {
-            env_logger::Builder::new().filter_level(log::LevelFilter::Info).init();
-            return Ok(());
-        },
-        "warn" => {
-            env_logger::Builder::new().filter_level(log::LevelFilter::Warn).init();
-            return Ok(());
-        },
-        "error" => {
-            env_logger::Builder::new().filter_level(log::LevelFilter::Error).init();
-            return Ok(());
-        },
-        _ => {
-            return Err(format!(r#"better-logger (native): The "terminal_log_lvl" setting must match: "trace", "debug", "info", "warn", or "error""#));
         }
     }
 }
@@ -143,36 +114,6 @@ fn initialize_wasm_logger(terminal_log_lvl: &str) -> Result<(), String> {
         },
         _ => {
             return Err(format!(r#"better-logger (wasm): The "terminal_log_lvl" setting must match: "trace", "debug", "info", "warn", or "error""#));
-        }
-    }
-}
-
-#[cfg(feature = "native")]
-fn initialize_file_logging(file_log_lvl: &str, log_file_path: &str) -> Result<(), String> {
-    match file_log_lvl {
-        "trace" => {},
-        "debug" => {},
-        "info" => {},
-        "warn" => {},
-        "error" => {},
-        _ => {
-            return Err(format!(r#"better-logger: The "file_log_lvl" setting must match: "trace", "debug", "info", "warn", or "error""#));
-        }
-    }
-
-    match create_file(log_file_path) {
-        Ok(file) => {
-            match crate::auxiliary::running_settings::LOG_FILE.set(Mutex::new(file)) {
-                Ok(_ok) => {
-                    return Ok(());
-                },
-                Err(_error) => {
-                    return Err(format!(r#"better-logger: Log file has already been initialized as a mutex"#));
-                }
-            }
-        },
-        Err(error) => {
-            return Err(format!(r#"better-logger: Could not create the log file. Reason: {}"#, error));
         }
     }
 }
