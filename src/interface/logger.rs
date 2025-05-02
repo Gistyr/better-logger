@@ -69,12 +69,20 @@ fn init_private(settings: LoggerSettings) -> Result<String, String> {
         crate::native::auxiliary::initialize_file_logging(&settings.file_log_lvl.to_lowercase().as_str(), &settings.log_file_path)?;
     }
 
+    if settings.network_logs == true {
+        #[cfg(feature = "native")]
+        crate::native::auxiliary::initialize_network_logging(&settings.network_log_lvl.to_lowercase().as_str())?;
+    }
+
     let running_settings = RunningSettings {
         terminal_logs: settings.terminal_logs,
         terminal_log_lvl: settings.terminal_log_lvl,
         wasm_logging: settings.wasm_logging,
         file_logs: settings.file_logs,
         file_log_lvl: settings.file_log_lvl,
+        network_logs: settings.network_logs,
+        network_log_lvl: settings.network_log_lvl,
+        network_endpoint_url: settings.network_endpoint_url,
         debug_extra: settings.debug_extra,
         async_logging: settings.async_logging,
     };

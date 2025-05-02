@@ -8,6 +8,9 @@ pub struct LoggerSettings {
     pub file_logs: bool,
     pub file_log_lvl: String,
     pub log_file_path: String,
+    pub network_logs: bool,
+    pub network_log_lvl: String,
+    pub network_endpoint_url: String,
     pub debug_extra: bool,
     pub async_logging: bool,
 }
@@ -32,9 +35,15 @@ pub(crate) struct RunningSettings {
     pub(crate) wasm_logging: bool,
     pub(crate) file_logs: bool,
     pub(crate) file_log_lvl: String,
+    pub(crate) network_logs: bool,
+    pub(crate) network_log_lvl: String,
+    pub(crate) network_endpoint_url: String,
     pub(crate) debug_extra: bool,
     pub(crate) async_logging: bool,
 }
 
 #[cfg(feature = "native")]
 pub(crate) static LOG_FILE: once_cell::sync::OnceCell<std::sync::Mutex<std::fs::File>> = once_cell::sync::OnceCell::new();
+
+#[cfg(feature = "native")]
+pub(crate) static CLIENT: once_cell::sync::Lazy<ureq::Agent> = once_cell::sync::Lazy::new(|| ureq::agent());

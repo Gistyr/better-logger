@@ -23,10 +23,11 @@ chrono = { version = "0.4.40", default-features = false, features = ["clock", "s
 wasm-logger = { version = "0.2.0", optional = true }
 web-sys = { version = "0.3.77", optional = true }
 wasm-bindgen-futures = { version = "0.4.50", optional = true }
+ureq = { version = "3.0.11", default-features = false, features = ["json", "rustls"], optional = true }
 yew = { version = "0.21.0", features = ["csr"], optional = true }
 
 [features]
-native = ["log", "once_cell", "env_logger", "tokio", "chrono"]
+native = ["log", "once_cell", "env_logger", "tokio", "chrono", "ureq"]
 wasm = ["log", "once_cell", "wasm-logger", "web-sys", "wasm-bindgen-futures"]
 testing = ["yew", "wasm"]
 

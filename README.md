@@ -78,8 +78,10 @@ fn my_function() {
 - Async logging uses a “fire and forget” model:
     - It spawns a new async task on the current Tokio runtime for each message
 - All macros use format! under the hood, any string-like type is accepted
-- Log messages routed through [env_logger](https://crates.io/crates/env_logger) are not written to the file
-    - Only messages emitted via better-logger are persisted to the log file
+- Log messages ([log](https://crates.io/crates/log)) routed through [env_logger](https://crates.io/crates/env_logger) and [wasm-logger](https://crates.io/crates/wasm-logger) are not written to the file or sent over the network
+    - Only messages emitted via [better-logger](https://crates.io/crates/better-logger) are persisted to the log file and sent over the network
+    - You can use better-logger as your logging facade 
+        - (You would have to incorporate [better-logger](https://crates.io/crates/better-logger) into your low level crates, but only initialize once at the highest level)
 #### Possible errors
 
 #### What is `DEBUGX`?
@@ -92,3 +94,7 @@ Later, if you're troubleshooting or need to view them, set `debug_extra = true`,
 - Append Setting
 - WASM Logging
 - Network Logging
+# Contributing
+#### TODO:
+- Validate all user settings in the init function
+- Formatting options for the log messages
