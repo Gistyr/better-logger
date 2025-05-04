@@ -53,6 +53,15 @@ pub fn init(settings: LoggerSettings) -> Result<String, String> {
 
 #[cfg(any(feature = "native", feature = "wasm"))]
 fn init_private(settings: LoggerSettings) -> Result<String, String> {
+    #[cfg(feature = "native")]
+    if settings.async_logging == true {
+        if settings.wasm_logging == false {
+            if tokio::runtime::Handle::try_current().is_err() {
+                return Err(format!(r#"better-logger: "logger::init()" must be called inside a Tokio runtime"#));
+            }
+        }
+    }
+
     if settings.terminal_logs == true {
         if settings.wasm_logging == false {
             #[cfg(feature = "native")]

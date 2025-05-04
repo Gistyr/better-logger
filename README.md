@@ -99,3 +99,62 @@ Later, if you're troubleshooting or need to view them, set `debug_extra = true`,
 
 
 Browsers don’t allow blocking network I/O on the main thread
+
+
+```
+2 What to tell users in the README
+Add a short “Runtime requirement” subsection—about 8 lines is enough:
+
+md
+Copy
+Edit
+### Runtime requirement (native targets)
+
+`better-logger` performs its asynchronous work with **Tokio**.  
+Call `better_logger::init()` **after** a Tokio runtime has started, otherwise
+initialisation will fail with  
+`better-logger: logger::init() must be called inside a Tokio runtime`.
+
+Most frameworks (Actix-Web, Axum, Tonic, Rocket ≥ 0.6, etc.) already start a
+runtime for you, so nothing extra is needed.
+
+For small CLI tools start one yourself:
+
+```rust
+fn main() -> anyhow::Result<()> {
+    let rt = tokio::runtime::Runtime::new()?;        // single call
+    rt.block_on(async {
+        better_logger::init(my_settings())?;
+        /* … your async logic … */
+    });
+    Ok(())
+}
+If you cannot run Tokio, compile without the native feature and stick to
+the synchronous paths.
+
+css
+Copy
+Edit
+
+That’s all that’s required for the *“quick & strict”* route—users get a clear
+error instead of a runtime panic, and the contract is documented right next to
+the installation instructions.
+```
+
+
+```
+
+README reminder (add just one sentence)
+Logging macros panic if called before better_logger::init().
+The panic message will read
+better-logger: macro called before logger::init().
+
+
+```
+```
+5. Network-logging differences between sync / async paths
+Native async path – wrapped in spawn_blocking, so OK.
+
+Native sync path – blocking HTTP request on caller’s thread (ureq::Agent::post(…)). If the logger is used in a latency-sensitive endpoint this can stall it.
+<br/>Fix by re-using spawn_blocking here too (or use the async ureq feature).
+```

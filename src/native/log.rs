@@ -19,13 +19,14 @@ use super::networking::send_log_line;
 ///9
 
 #[cfg(feature = "native")]
-pub(crate) fn native_log_async(level: &str, msg: &str) {
+pub(crate) fn native_log_async(level: &str, target: &str, msg: &str) {
     let running_settings = RUNNING_SETTINGS.get().unwrap();
 
     if running_settings.terminal_logs == true {
         let terminal_set_log_level: String = running_settings.terminal_log_lvl.clone();
         let given_message_level_one: String = level.to_string();
         let given_message_one: String = msg.to_string();
+        let target_one: String = target.to_string();
 
         tokio::spawn(async move {
             let terminal_current_settings: u8 = {
@@ -59,19 +60,19 @@ pub(crate) fn native_log_async(level: &str, msg: &str) {
             if terminal_requested_message_level >= terminal_current_settings {
                 match given_message_level_one.as_str() {
                     "trace" => {
-                        log::trace!("{}", given_message_one);
+                        log::trace!(target: &target_one, "{}", given_message_one);
                     },
                     "debug" => {
-                        log::debug!("{}", given_message_one);
+                        log::debug!(target: &target_one, "{}", given_message_one);
                     },
                     "info" => {
-                        log::info!("{}", given_message_one);
+                        log::info!(target: &target_one, "{}", given_message_one);
                     },
                     "warn" => {
-                        log::warn!("{}", given_message_one);
+                        log::warn!(target: &target_one, "{}", given_message_one);
                     },
                     "error" => {
-                        log::error!("{}", given_message_one);
+                        log::error!(target: &target_one, "{}", given_message_one);
                     },
                     _ => { 
                         eprintln!(r#"better-logger (2)(native_log_async): "given_message_level_one" failed to match"#);
@@ -86,6 +87,7 @@ pub(crate) fn native_log_async(level: &str, msg: &str) {
         let file_set_log_level: String = running_settings.file_log_lvl.clone();
         let given_message_level_two: String = level.to_string();
         let given_message_two: String = msg.to_string();
+        let target_two: String = target.to_string();
 
         tokio::spawn(async move {
             let file_current_settings: u8 = {
@@ -119,27 +121,27 @@ pub(crate) fn native_log_async(level: &str, msg: &str) {
             if file_requested_message_level >= file_current_settings {
                 match given_message_level_two.as_str() {
                     "trace" => {
-                        if let Err(error) = write_log_line("TRACE", module_path!(), &given_message_two) {
+                        if let Err(error) = write_log_line("TRACE", &target_two, &given_message_two) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
                     },
                     "debug" => {
-                        if let Err(error) = write_log_line("DEBUG", module_path!(), &given_message_two) {
+                        if let Err(error) = write_log_line("DEBUG", &target_two, &given_message_two) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
                     },
                     "info" => {
-                        if let Err(error) = write_log_line("INFO", module_path!(), &given_message_two) {
+                        if let Err(error) = write_log_line("INFO", &target_two, &given_message_two) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
                     },
                     "warn" => {
-                        if let Err(error) = write_log_line("WARN", module_path!(), &given_message_two) {
+                        if let Err(error) = write_log_line("WARN", &target_two, &given_message_two) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
                     },
                     "error" => {
-                        if let Err(error) = write_log_line("ERROR", module_path!(), &given_message_two) {
+                        if let Err(error) = write_log_line("ERROR", &target_two, &given_message_two) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
                     },
@@ -156,6 +158,7 @@ pub(crate) fn native_log_async(level: &str, msg: &str) {
         let network_set_log_level: String = running_settings.network_log_lvl.clone();
         let given_message_level_three: String = level.to_string();
         let given_message_three: String = msg.to_string();
+        let target_three: String = target.to_string();
 
         tokio::task::spawn_blocking(move || {
             let network_current_settings: u8 = {
@@ -189,27 +192,27 @@ pub(crate) fn native_log_async(level: &str, msg: &str) {
             if network_requested_message_level >= network_current_settings {
                 match given_message_level_three.as_str() {
                     "trace" => {
-                        if let Err(error) = send_log_line("TRACE", module_path!(), &given_message_three) {
+                        if let Err(error) = send_log_line("TRACE", &target_three, &given_message_three) {
                             eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
                         }
                     },
                     "debug" => {
-                        if let Err(error) = send_log_line("DEBUG", module_path!(), &given_message_three) {
+                        if let Err(error) = send_log_line("DEBUG", &target_three, &given_message_three) {
                             eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
                         }
                     },
                     "info" => {
-                        if let Err(error) = send_log_line("INFO", module_path!(), &given_message_three) {
+                        if let Err(error) = send_log_line("INFO", &target_three, &given_message_three) {
                             eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
                         }
                     },
                     "warn" => {
-                        if let Err(error) = send_log_line("WARN", module_path!(), &given_message_three) {
+                        if let Err(error) = send_log_line("WARN", &target_three, &given_message_three) {
                             eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
                         }
                     },
                     "error" => {
-                        if let Err(error) = send_log_line("ERROR", module_path!(), &given_message_three) {
+                        if let Err(error) = send_log_line("ERROR", &target_three, &given_message_three) {
                             eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
                         }
                     },
@@ -235,7 +238,7 @@ pub(crate) fn native_log_async(level: &str, msg: &str) {
 ///9
 
 #[cfg(feature = "native")]
-pub(crate) fn native_log_sync(level: &str, msg: &str) {
+pub(crate) fn native_log_sync(level: &str, target: &str, msg: &str) {
     let running_settings = RUNNING_SETTINGS.get().unwrap();
 
     if running_settings.terminal_logs == true {
@@ -270,19 +273,19 @@ pub(crate) fn native_log_sync(level: &str, msg: &str) {
         if terminal_requested_message_level >= terminal_current_settings {
             match level {
                 "trace" => {
-                    log::trace!("{}", msg);
+                    log::trace!(target: target, "{}", msg);
                 },
                 "debug" => {
-                    log::debug!("{}", msg);
+                    log::debug!(target: target, "{}", msg);
                 },
                 "info" => {
-                    log::info!("{}", msg);
+                    log::info!(target: target, "{}", msg);
                 },
                 "warn" => {
-                    log::warn!("{}", msg);
+                    log::warn!(target: target, "{}", msg);
                 },
                 "error" => {
-                    log::error!("{}", msg);
+                    log::error!(target: target, "{}", msg);
                 },
                 _ => { 
                     eprintln!(r#"better-logger (2)(native_log_sync): "level" failed to match"#);
@@ -324,27 +327,27 @@ pub(crate) fn native_log_sync(level: &str, msg: &str) {
         if file_requested_message_level >= file_current_settings {
             match level {
                 "trace" => {
-                    if let Err(error) = write_log_line("TRACE", module_path!(), &msg) {
+                    if let Err(error) = write_log_line("TRACE", target, &msg) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
                 },
                 "debug" => {
-                    if let Err(error) = write_log_line("DEBUG", module_path!(), &msg) {
+                    if let Err(error) = write_log_line("DEBUG", target, &msg) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
                 },
                 "info" => {
-                    if let Err(error) = write_log_line("INFO", module_path!(), &msg) {
+                    if let Err(error) = write_log_line("INFO", target, &msg) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
                 },
                 "warn" => {
-                    if let Err(error) = write_log_line("WARN", module_path!(), &msg) {
+                    if let Err(error) = write_log_line("WARN", target, &msg) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
                 },
                 "error" => {
-                    if let Err(error) = write_log_line("ERROR", module_path!(), &msg) {
+                    if let Err(error) = write_log_line("ERROR", target, &msg) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
                 },
@@ -388,27 +391,27 @@ pub(crate) fn native_log_sync(level: &str, msg: &str) {
         if network_requested_message_level >= network_current_settings {
             match level {
                 "trace" => {
-                    if let Err(error) = send_log_line("TRACE", module_path!(), &msg) {
+                    if let Err(error) = send_log_line("TRACE", target, &msg) {
                         eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
                     }
                 },
                 "debug" => {
-                    if let Err(error) = send_log_line("DEBUG", module_path!(), &msg) {
+                    if let Err(error) = send_log_line("DEBUG", target, &msg) {
                         eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
                     }
                 },
                 "info" => {
-                    if let Err(error) = send_log_line("INFO", module_path!(), &msg) {
+                    if let Err(error) = send_log_line("INFO", target, &msg) {
                         eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
                     }
                 },
                 "warn" => {
-                    if let Err(error) = send_log_line("WARN", module_path!(), &msg) {
+                    if let Err(error) = send_log_line("WARN", target, &msg) {
                         eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
                     }
                 },
                 "error" => {
-                    if let Err(error) = send_log_line("ERROR", module_path!(), &msg) {
+                    if let Err(error) = send_log_line("ERROR", target, &msg) {
                         eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
                     }
                 },

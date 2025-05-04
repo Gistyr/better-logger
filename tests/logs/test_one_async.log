@@ -1,7 +1,7 @@
-[2025-05-04T12:49:20Z TRACE better_logger::native::log] Test One: TRACE and above, terminal and file
-[2025-05-04T12:49:20Z TRACE better_logger::native::log] TRACE: async Test One
-[2025-05-04T12:49:20Z DEBUG better_logger::native::log] DEBUG: async Test One
-[2025-05-04T12:49:20Z DEBUG better_logger::native::log] DEBUGX: async Test One
-[2025-05-04T12:49:20Z INFO better_logger::native::log] INFO: async Test One
-[2025-05-04T12:49:20Z WARN better_logger::native::log] WARN: async Test One
-[2025-05-04T12:49:20Z ERROR better_logger::native::log] ERROR: async Test One
+[2025-05-04T16:02:33Z TRACE async_native] Test One: TRACE and above, terminal and file
+[2025-05-04T16:02:33Z TRACE async_native] TRACE: async Test One
+[2025-05-04T16:02:33Z DEBUG async_native] DEBUG: async Test One
+[2025-05-04T16:02:33Z DEBUG async_native] DEBUGX: async Test One
+[2025-05-04T16:02:33Z INFO async_native] INFO: async Test One
+[2025-05-04T16:02:33Z WARN async_native] WARN: async Test One
+[2025-05-04T16:02:33Z ERROR async_native] ERROR: async Test One

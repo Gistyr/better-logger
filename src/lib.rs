@@ -1,4 +1,5 @@
 // better-logger/src/lib.rs
+
 #[cfg(any(feature = "native", feature = "wasm"))]
 pub mod interface;
 
@@ -40,8 +41,20 @@ use crate::interface::settings::RUNNING_SETTINGS;
 
 #[cfg(any(feature = "native", feature = "wasm"))]
 #[doc(hidden)]
+pub fn debug_extra_enabled() -> bool {
+    let running_settings = RUNNING_SETTINGS.get().expect("better-logger: macro called before logger::init()");
+    if running_settings.debug_extra == true {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+#[cfg(any(feature = "native", feature = "wasm"))]
+#[doc(hidden)]
 pub fn is_async() -> bool {
-    let running_settings = RUNNING_SETTINGS.get().unwrap();
+    let running_settings = RUNNING_SETTINGS.get().expect("better-logger: macro called before logger::init()");
     if running_settings.async_logging == true {
         return true;
     }
@@ -52,34 +65,22 @@ pub fn is_async() -> bool {
 
 #[cfg(any(feature = "native", feature = "wasm"))]
 #[doc(hidden)]
-pub fn log_async(level: &str, msg: &str) {
+pub fn log_async(level: &str, target: &str, msg: &str) {
     #[cfg(feature = "native")]
-    crate::native::log::native_log_async(level, msg);
+    crate::native::log::native_log_async(level, target, msg);
 
     #[cfg(feature = "wasm")]
-    crate::wasm::log::wasm_log_async(level, msg);
+    crate::wasm::log::wasm_log_async(level, target, msg);
 }
 
 #[cfg(any(feature = "native", feature = "wasm"))]
 #[doc(hidden)]
-pub fn log_sync(level: &str, msg: &str) {
+pub fn log_sync(level: &str, target: &str, msg: &str) {
     #[cfg(feature = "native")]
-    crate::native::log::native_log_sync(level, msg);
+    crate::native::log::native_log_sync(level, target, msg);
 
     #[cfg(feature = "wasm")]
-    crate::wasm::log::wasm_log_sync(level, msg);
-}
-
-#[cfg(any(feature = "native", feature = "wasm"))]
-#[doc(hidden)]
-pub fn debug_extra_enabled() -> bool {
-    let running_settings = RUNNING_SETTINGS.get().unwrap();
-    if running_settings.debug_extra == true {
-        return true;
-    }
-    else {
-        return false;
-    }
+    crate::wasm::log::wasm_log_sync(level, target, msg);
 }
 
 ///0
@@ -97,13 +98,14 @@ pub fn debug_extra_enabled() -> bool {
 #[macro_export]
 macro_rules! trace {
     ($($arg:tt)*) => {
-        {
+        {   
+            let target = module_path!();
             let message = format!($($arg)*);
             if $crate::is_async() == true {
-                $crate::log_async("trace", &message);
+                $crate::log_async("trace", target, &message);
             } 
             else {
-                $crate::log_sync("trace", &message);
+                $crate::log_sync("trace", target, &message);
             }
         }
     };
@@ -113,13 +115,14 @@ macro_rules! trace {
 #[macro_export]
 macro_rules! debug {
     ($($arg:tt)*) => {
-        {
+        {   
+            let target = module_path!();
             let message = format!($($arg)*);
             if $crate::is_async() == true {
-                $crate::log_async("debug", &message);
+                $crate::log_async("debug", target, &message);
             } 
             else {
-                $crate::log_sync("debug", &message);
+                $crate::log_sync("debug", target, &message);
             }
         }
     };
@@ -129,13 +132,14 @@ macro_rules! debug {
 #[macro_export]
 macro_rules! debugx {
     ($($arg:tt)*) => {
-        {
+        {   
             if $crate::debug_extra_enabled() == true {
+                let target = module_path!();
                 let message = format!($($arg)*);
                 if $crate::is_async() == true {
-                    $crate::log_async("debug", &message);
+                    $crate::log_async("debug", target, &message);
                 } else {
-                    $crate::log_sync("debug", &message);
+                    $crate::log_sync("debug", target, &message);
                 }
             }
         }
@@ -147,12 +151,13 @@ macro_rules! debugx {
 macro_rules! info {
     ($($arg:tt)*) => {
         {
+            let target = module_path!();
             let message = format!($($arg)*);
             if $crate::is_async() == true {
-                $crate::log_async("info", &message);
+                $crate::log_async("info", target, &message);
             } 
             else {
-                $crate::log_sync("info", &message);
+                $crate::log_sync("info", target, &message);
             }
         }
     };
@@ -163,12 +168,13 @@ macro_rules! info {
 macro_rules! warn {
     ($($arg:tt)*) => {
         {
+            let target = module_path!();
             let message = format!($($arg)*);
             if $crate::is_async() == true {
-                $crate::log_async("warn", &message);
+                $crate::log_async("warn", target, &message);
             } 
             else {
-                $crate::log_sync("warn", &message);
+                $crate::log_sync("warn", target, &message);
             }
         }
     };
@@ -179,12 +185,13 @@ macro_rules! warn {
 macro_rules! error {
     ($($arg:tt)*) => {
         {
+            let target = module_path!();
             let message = format!($($arg)*);
             if $crate::is_async() == true {
-                $crate::log_async("error", &message);
+                $crate::log_async("error", target, &message);
             } 
             else {
-                $crate::log_sync("error", &message);
+                $crate::log_sync("error", target, &message);
             }
         }
     };
