@@ -1,3 +1,10 @@
+# BETTER-LOGGER
+### Full stack developement, one logger to rule them all
+✔️ **Native Environment**       
+✔️ **WASM Environment**        
+✔️ **Terminal Logging**               
+✔️ **File Logging**              
+✔️ **Network Logging**           
 # HOW TO USE
 ## 😺 ONE: Declare Feature
 ```rust
