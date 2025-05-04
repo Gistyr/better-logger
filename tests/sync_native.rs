@@ -1,5 +1,6 @@
 // better-logger/tests/sync_native.rs
 
+// cargo build --features native
 // cargo test --features native test_six -- --nocapture
 // Each test has to be run individually
 
@@ -16,6 +17,9 @@ fn test_six() {
         file_logs: true,
         file_log_lvl: "trace".to_string(),
         log_file_path: "tests/logs/test_six_sync.log".to_string(),
+        network_logs: true,
+        network_log_lvl: "trace".to_string(),
+        network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
         debug_extra: true,
         async_logging: false,
     };
@@ -47,6 +51,9 @@ fn test_seven() {
         file_logs: true,
         file_log_lvl: "warn".to_string(),
         log_file_path: "tests/logs/test_seven_sync.log".to_string(),
+        network_logs: true,
+        network_log_lvl: "trace".to_string(),
+        network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
         debug_extra: true,
         async_logging: false,
     };
@@ -78,6 +85,9 @@ fn test_eight() {
         file_logs: false,
         file_log_lvl: "debug".to_string(),
         log_file_path: "tests/logs/test_eight_sync.log".to_string(),
+        network_logs: true,
+        network_log_lvl: "trace".to_string(),
+        network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
         debug_extra: false,
         async_logging: false,
     };
@@ -109,6 +119,9 @@ fn test_nine() {
         file_logs: true,
         file_log_lvl: "error".to_string(),
         log_file_path: "tests/logs/test_nine_sync.log".to_string(),
+        network_logs: true,
+        network_log_lvl: "trace".to_string(),
+        network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
         debug_extra: false,
         async_logging: false,
     };
@@ -140,6 +153,9 @@ fn test_ten() {
         file_logs: true,
         file_log_lvl: "info".to_string(),
         log_file_path: "tests/logs/test_ten_sync.log".to_string(),
+        network_logs: true,
+        network_log_lvl: "trace".to_string(),
+        network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
         debug_extra: true,
         async_logging: false,
     };

@@ -1,7 +1,7 @@
 // better-logger/src/native/auxiliary.rs
 
 #[cfg(feature = "native")]
-use crate::interface::settings::{LOG_FILE, CLIENT};
+use crate::interface::settings::LOG_FILE;
 
 ///0
 ///1
