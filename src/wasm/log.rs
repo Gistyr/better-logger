@@ -3,6 +3,8 @@
 #[cfg(feature = "wasm")]
 use crate::interface::settings::RUNNING_SETTINGS;
 #[cfg(feature = "wasm")]
+use super::networking::send_log_line;
+#[cfg(feature = "wasm")]
 use web_sys::console::error_1;
 
 ///0
@@ -78,6 +80,70 @@ pub(crate) fn wasm_log_async(level: &str, msg: &str) {
                 };
             }
         });
+    }
+
+    if running_settings.network_logs == true {
+        let network_current_settings: u8 = {
+            match running_settings.network_log_lvl.as_str() {
+                "trace" => 0,
+                "debug" => 1,
+                "info" => 2,
+                "warn" => 3,
+                "error" => 4,
+                _ => { 
+                    error_1(&format!(r#"better-logger (wasm_log_sync): "running_settings.network_log_lvl" failed to match"#).as_str().into());
+                    panic!();
+                }
+            }
+        };
+
+        let network_requested_message_level: u8 = {
+            match level {
+                "trace" => 0,
+                "debug" => 1,
+                "info" => 2,
+                "warn" => 3,
+                "error" => 4,
+                _ => { 
+                    error_1(&format!(r#"better-logger (3)(wasm_log_sync): "level" failed to match"#).as_str().into());
+                    panic!();
+                }
+            }
+        };
+
+        if network_requested_message_level >= network_current_settings {
+            match level {
+                "trace" => {
+                    if let Err(error) = send_log_line("TRACE", module_path!(), msg) {
+                        error_1(&error.into());
+                    }
+                },
+                "debug" => {
+                    if let Err(error) = send_log_line("DEBUG", module_path!(), msg) {
+                        error_1(&error.into());
+                    }
+                },
+                "info" => {
+                    if let Err(error) = send_log_line("INFO", module_path!(), msg) {
+                        error_1(&error.into());
+                    }
+                },
+                "warn" => {
+                    if let Err(error) = send_log_line("WARN", module_path!(), msg) {
+                        error_1(&error.into());
+                    }
+                },
+                "error" => {
+                    if let Err(error) = send_log_line("ERROR", module_path!(), msg) {
+                        error_1(&error.into());
+                    }
+                },
+                _ => { 
+                    error_1(&format!(r#"better-logger (4)(wasm_log_sync): "level" failed to match"#).as_str().into());
+                    panic!();
+                }
+            };
+        }
     }
 }
 

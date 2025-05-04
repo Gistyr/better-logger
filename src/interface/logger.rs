@@ -76,6 +76,14 @@ fn init_private(settings: LoggerSettings) -> Result<String, String> {
     if settings.network_logs == true {
         #[cfg(feature = "native")]
         crate::native::auxiliary::initialize_network_logging(&settings.network_log_lvl.to_lowercase().as_str())?;
+
+        #[cfg(feature = "wasm")]
+        crate::wasm::auxiliary::initialize_network_logging(&settings.network_log_lvl.to_lowercase().as_str())?;
+
+        #[cfg(feature = "wasm")]
+        if settings.async_logging == false {
+            return Err(format!(r#"better-logger: when using network logging in a WASM environment, the async_logging setting must be true. Browsers don't allow blocking network I/O on the main thread"#));
+        }
     }
 
     let running_settings = RunningSettings {

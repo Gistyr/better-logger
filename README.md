@@ -90,11 +90,12 @@ It is just a second debug, the `debugx!()` logs will be labeled as `DEBUG` when 
 Let’s say you’re in development, so you want to see all your ``debug`` logs. However, some of your ``debug`` logs are massive and clutter your terminal.                                                                    
 You can mark those verbose logs as `debugx!()` and set `debug_extra = false` to hid them.                                      
 Later, if you're troubleshooting or need to view them, set `debug_extra = true`, and see your extra debug logs!                  
-# Future Plans
-- Append Setting
-- WASM Logging
-- Network Logging
 # Contributing
 #### TODO:
 - Validate all user settings in the init function
 - Formatting options for the log messages
+- Append option for file logs
+- Consolidation, optimization
+
+
+Browsers don’t allow blocking network I/O on the main thread

@@ -28,3 +28,19 @@ pub(crate) fn initialize_wasm_logger(terminal_log_lvl: &str) -> Result<(), Strin
         }
     }
 }
+
+#[cfg(feature = "wasm")]
+pub(crate) fn initialize_network_logging(network_log_lvl: &str) -> Result<(), String> {
+    match network_log_lvl {
+        "trace" => {},
+        "debug" => {},
+        "info" => {},
+        "warn" => {},
+        "error" => {},
+        _ => {
+            return Err(format!(r#"better-logger: The "network_log_lvl" setting must match: "trace", "debug", "info", "warn", or "error""#));
+        }
+    }
+    
+    return Ok(());
+}
