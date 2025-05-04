@@ -1,37 +1,56 @@
 # HOW TO USE
-## ONE: Declare Feature
+## 😺 ONE: Declare Feature
 ```rust
-better-logger = { version = "1.0.0", features = ["native"] }
-better-logger = { version = "1.0.0", features = ["wasm"] }
+/* no default feature available (using both will fail) */
+better-logger = { version = "1.0.1", features = ["native"] }
+better-logger = { version = "1.0.1", features = ["wasm"] }
 ```
-## TWO: Settings
+## 💻 TWO: Settings
 ```rust
 use better_logger::LoggerSettings;
 
-// If using the native feature 
-let log_settings = LoggerSettings {
+/* native settings */
+let settings = LoggerSettings {
     terminal_logs: true,
     terminal_log_lvl: "trace".to_string(),
-    wasm_logging: false,
+    wasm_logging: false, // must be false 
     file_logs: true,
     file_log_lvl: "error".to_string(),
     log_file_path: "/path/to/my/file.log".to_string(),
+    network_logs: true,
+    network_log_lvl: "warn".to_string(),
+    network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
     debug_extra: true,
     async_logging: false,
 };
+
+/* wasm settings */
+let settings = LoggerSettings {
+    terminal_logs: true,
+    terminal_log_lvl: "debug".to_string(),
+    wasm_logging: true, // must be true
+    file_logs: false, // must be false
+    file_log_lvl: "".to_string(), // value doesn't matter
+    log_file_path: "".to_string(), // value doesn't matter
+    network_logs: true,
+    network_log_lvl: "trace".to_string(),
+    network_endpoint_url: "https://my.domain.com".to_string(),
+    debug_extra: true,
+    async_logging: true, // if network_logs is true, async_logging must also be true 
+};
 ```
-## THREE: Initialize
+## 💡 THREE: Initialize
 ```rust
 use better_logger::logger;
 
 fn main() {
-    if let Err(err) = logger::init(log_settings) {
+    if let Err(err) = logger::init(settings) {
         eprintln!("{:?}", error);
         std::process::exit(1);
     }
 }
 ```
-## FOUR: Log
+## ⚠️ FOUR: Log
 ```rust
 use better_logger::logger::*;
 
@@ -48,42 +67,44 @@ fn my_function() {
     error!(r#""hello" "world" {}"#, error);
 }
 ```
-| SETTING             | DESCRIPTION               | 
-|---------------------|---------------------------|
-| `terminal_logs`     | Log to terminal           |
-| `terminal_log_lvl`  | Minimum level to display  |
-| `wasm_logging`      | Log to dev tools console  | 
-| `file_logs`         | Log to file               |
-| `file_log_lvl`      | Minimum level to write    |
-| `log_file_path`     | Path to log file          |
-| `debug_extra`       | Show `debugx!` logs       |
-| `async_logging`     | Enable async logging      |
-# Rules
-**better-logger has no default feature:**     
-- Using both will fail
-
-**If using the wasm feature:**
-- wasm_logging must be true
-- file_logs must be false
-
-**If using the native feature**
-- wasm_logging must be false
-# INFORMATION
+`trace!` ➡️ (`debug!`, `debugx!`) ➡️ `info!` ➡️ `warn!` ➡️ `error!`
+| SETTING                  | DESCRIPTION                   |   
+|--------------------------|-------------------------------|
+| `terminal_logs`          | Log to terminal               |
+| `terminal_log_lvl`       | Minimum level to display      |
+| `wasm_logging`           | Log to dev tools console      | 
+| `file_logs`              | Log to file                   |
+| `file_log_lvl`           | Minimum level to write        |
+| `log_file_path`          | Path to log file              |
+| `network_logs`           | Log to a http endpoint        |
+| `network_log_lvl`        | Minimum level to send         |
+| `network_endpoint_url`   | URL to send log messages to   |
+| `debug_extra`            | Show `debugx!` logs           |
+| `async_logging`          | Enable async logging          |
+# ℹ️ INFORMATION
 - NATIVE console logging uses [env_logger](https://crates.io/crates/env_logger)
 - WASM console logging uses [wasm-logger](https://crates.io/crates/wasm-logger)
-- File logging uses the same format as the NATIVE console logs
-- `trace!` -> (`debug!`, `debugx!`) -> `info!` -> `warn!` -> `error!`
+- Log messages ([log](https://crates.io/crates/log)) routed through [env_logger](https://crates.io/crates/env_logger) and [wasm-logger](https://crates.io/crates/wasm-logger) **are NOT written to the file or sent via HTTP**
+    - **Only** messages emitted via [better-logger](https://crates.io/crates/better-logger) are **persisted** to the log file and sent via HTTP 
+    - **You can use better-logger as your logging facade**
+        - You would have to incorporate [better-logger](https://crates.io/crates/better-logger) into your low level crates, but only initialize **ONCE at the highest level**
+- `logger::init()` Can only be called ONCE, subsequent calls will cause a `panic!()`
+- [better-logger's](https://crates.io/crates/better-logger) NATIVE feature **requires the TOKIO runtime** ([tokio](https://crates.io/crates/tokio))
+    - ASYNC only, if `async_logging: false`, [tokio](https://crates.io/crates/tokio) is not used
+    - Many async frameworks will start the tokio runtime for you
+- `File and network logging` uses the same `formatting` as the `NATIVE console logs`
 - better-logger will automatically create the path and file if not already created
-- File logs are overwritten not appended
-- Async logging uses a “fire and forget” model:
-    - It spawns a new async task on the current Tokio runtime for each message
-- All macros use format! under the hood, any string-like type is accepted
-- Log messages ([log](https://crates.io/crates/log)) routed through [env_logger](https://crates.io/crates/env_logger) and [wasm-logger](https://crates.io/crates/wasm-logger) are not written to the file or sent over the network
-    - Only messages emitted via [better-logger](https://crates.io/crates/better-logger) are persisted to the log file and sent over the network
-    - You can use better-logger as your logging facade 
-        - (You would have to incorporate [better-logger](https://crates.io/crates/better-logger) into your low level crates, but only initialize once at the highest level)
-#### Possible errors
-
+    - `log_file_path` requires a `local` or `absolute` path, **a file name only will fail** `(E.g. log_file_path: "file.log".to_string())` 
+    - File logs are **overwritten not appended**
+- Async logging uses a **“fire and forget”** model:
+    - It spawns a new async task on the current ([tokio](https://crates.io/crates/tokio)) runtime for each message
+- Network logging uses a **“fire and forget”** model
+     - If HTTP endpoint is down, [better-logger's](https://crates.io/crates/better-logger) will continue to run without issue
+- Why is `synchronous` `network logging` NOT allowed `in WASM`? 
+    - Browsers don’t allow blocking network I/O on the main thread
+- Why is `file logging` NOT allowed `in WASM`?
+    - Browsers can't talk to your file system
+- All macros use `format!()` under the hood, any string-like type is accepted
 #### What is `DEBUGX`?
 It is just a second debug, the `debugx!()` logs will be labeled as `DEBUG` when they print
 #### Why would I want to use `DEBUGX`?
@@ -94,67 +115,7 @@ Later, if you're troubleshooting or need to view them, set `debug_extra = true`,
 #### TODO:
 - Validate all user settings in the init function
 - Formatting options for the log messages
+- UDP logging
 - Append option for file logs
+- Native async logging without Tokio
 - Consolidation, optimization
-
-
-Browsers don’t allow blocking network I/O on the main thread
-
-
-```
-2 What to tell users in the README
-Add a short “Runtime requirement” subsection—about 8 lines is enough:
-
-md
-Copy
-Edit
-### Runtime requirement (native targets)
-
-`better-logger` performs its asynchronous work with **Tokio**.  
-Call `better_logger::init()` **after** a Tokio runtime has started, otherwise
-initialisation will fail with  
-`better-logger: logger::init() must be called inside a Tokio runtime`.
-
-Most frameworks (Actix-Web, Axum, Tonic, Rocket ≥ 0.6, etc.) already start a
-runtime for you, so nothing extra is needed.
-
-For small CLI tools start one yourself:
-
-```rust
-fn main() -> anyhow::Result<()> {
-    let rt = tokio::runtime::Runtime::new()?;        // single call
-    rt.block_on(async {
-        better_logger::init(my_settings())?;
-        /* … your async logic … */
-    });
-    Ok(())
-}
-If you cannot run Tokio, compile without the native feature and stick to
-the synchronous paths.
-
-css
-Copy
-Edit
-
-That’s all that’s required for the *“quick & strict”* route—users get a clear
-error instead of a runtime panic, and the contract is documented right next to
-the installation instructions.
-```
-
-
-```
-
-README reminder (add just one sentence)
-Logging macros panic if called before better_logger::init().
-The panic message will read
-better-logger: macro called before logger::init().
-
-
-```
-```
-5. Network-logging differences between sync / async paths
-Native async path – wrapped in spawn_blocking, so OK.
-
-Native sync path – blocking HTTP request on caller’s thread (ureq::Agent::post(…)). If the logger is used in a latency-sensitive endpoint this can stall it.
-<br/>Fix by re-using spawn_blocking here too (or use the async ureq feature).
-```
