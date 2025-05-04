@@ -5,14 +5,14 @@
 // trunk build
 // trunk serve
 
-#[cfg(feature = "testing")]
+#[cfg(feature = "testing-wasm")]
 use better_logger::LoggerSettings;
-#[cfg(feature = "testing")]
+#[cfg(feature = "testing-wasm")]
 use better_logger::logger::*;
-#[cfg(feature = "testing")]
+#[cfg(feature = "testing-wasm")]
 use better_logger::logger;
 
-#[cfg(feature = "testing")]
+#[cfg(feature = "testing-wasm")]
 fn main() {
     let settings = LoggerSettings {
         terminal_logs: true,
@@ -33,7 +33,7 @@ fn main() {
     yew::Renderer::<App>::new().render();
 }
 
-#[cfg(feature = "testing")]
+#[cfg(feature = "testing-wasm")]
 #[yew::function_component(App)]
 pub fn app() -> yew::Html {
     let debug: &str = "DEBUG";

@@ -1,1 +1,7 @@
-[2025-05-02T23:03:24Z TRACE better_logger::native::log] Test Six: TRACE and above, terminal and file
+[2025-05-04T12:07:46Z TRACE better_logger::native::log] Test Six: TRACE and above, terminal and file
+[2025-05-04T12:07:46Z TRACE better_logger::native::log] TRACE: sync Test Six
+[2025-05-04T12:07:46Z DEBUG better_logger::native::log] DEBUG: async Test Six
+[2025-05-04T12:07:46Z DEBUG better_logger::native::log] DEBUGX: async Test Six
+[2025-05-04T12:07:46Z INFO better_logger::native::log] INFO: sync Test Six
+[2025-05-04T12:07:46Z WARN better_logger::native::log] WARN: sync Test Six
+[2025-05-04T12:07:46Z ERROR better_logger::native::log] ERROR: sync Test Six

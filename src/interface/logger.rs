@@ -1,5 +1,6 @@
 // better-logger/src/interface/logger.rs
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 pub use crate::{trace, debug, debugx, info, warn, error};
 
 ///0
@@ -13,6 +14,7 @@ pub use crate::{trace, debug, debugx, info, warn, error};
 ///8
 ///9
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 use super::settings::{LoggerSettings, RunningSettings, RUNNING_SETTINGS};
 
 ///0
@@ -26,6 +28,7 @@ use super::settings::{LoggerSettings, RunningSettings, RUNNING_SETTINGS};
 ///8
 ///9
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 pub fn init(settings: LoggerSettings) -> Result<String, String> {
     match init_private(settings) {
         Ok(msg) => {
@@ -48,6 +51,7 @@ pub fn init(settings: LoggerSettings) -> Result<String, String> {
 ///8
 ///9
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 fn init_private(settings: LoggerSettings) -> Result<String, String> {
     if settings.terminal_logs == true {
         if settings.wasm_logging == false {

@@ -25,11 +25,13 @@ web-sys = { version = "0.3.77", optional = true }
 wasm-bindgen-futures = { version = "0.4.50", optional = true }
 ureq = { version = "3.0.11", default-features = false, features = ["json", "rustls"], optional = true }
 yew = { version = "0.21.0", features = ["csr"], optional = true }
+tiny_http = { version = "0.12.0", optional = true }
 
 [features]
 native = ["log", "once_cell", "env_logger", "tokio", "chrono", "ureq"]
 wasm = ["log", "once_cell", "wasm-logger", "web-sys", "wasm-bindgen-futures"]
-testing = ["yew", "wasm"]
+testing-wasm = ["yew", "wasm"]
+testing-http = ["tiny_http", "native"]
 
 [dev-dependencies]
 tokio = { version = "1.44.2", default-features = false, features = ["rt","macros","time"] }
@@ -37,4 +39,9 @@ tokio = { version = "1.44.2", default-features = false, features = ["rt","macros
 [[bin]]
 name = "wasm-test"
 path = "tests/wasm_environment/main.rs"
-required-features = ["testing"]
+required-features = ["testing-wasm"]
+
+[[bin]]
+name = "http-test"
+path = "tests/http_server/main.rs"
+required-features = ["testing-http"]

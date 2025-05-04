@@ -1,12 +1,16 @@
 // better-logger/src/lib.rs
-
+#[cfg(any(feature = "native", feature = "wasm"))]
 pub mod interface;
 
+#[cfg(feature = "native")]
 pub(crate) mod native;
+#[cfg(feature = "wasm")]
 pub(crate) mod wasm;
-
+#[cfg(any(feature = "native", feature = "wasm"))]
 pub use interface::settings::LoggerSettings as LoggerSettings;
+#[cfg(any(feature = "native", feature = "wasm"))]
 pub use interface::logger as logger;
+#[cfg(any(feature = "native", feature = "wasm"))]
 pub use interface::logger::init as init;
 
 ///0
@@ -20,6 +24,7 @@ pub use interface::logger::init as init;
 ///8
 ///9
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 use crate::interface::settings::RUNNING_SETTINGS;
 
 ///0
@@ -33,6 +38,7 @@ use crate::interface::settings::RUNNING_SETTINGS;
 ///8
 ///9
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 #[doc(hidden)]
 pub fn is_async() -> bool {
     let running_settings = RUNNING_SETTINGS.get().unwrap();
@@ -44,6 +50,7 @@ pub fn is_async() -> bool {
     }
 }
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 #[doc(hidden)]
 pub fn log_async(level: &str, msg: &str) {
     #[cfg(feature = "native")]
@@ -53,6 +60,7 @@ pub fn log_async(level: &str, msg: &str) {
     crate::wasm::log::wasm_log_async(level, msg);
 }
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 #[doc(hidden)]
 pub fn log_sync(level: &str, msg: &str) {
     #[cfg(feature = "native")]
@@ -62,6 +70,7 @@ pub fn log_sync(level: &str, msg: &str) {
     crate::wasm::log::wasm_log_sync(level, msg);
 }
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 #[doc(hidden)]
 pub fn debug_extra_enabled() -> bool {
     let running_settings = RUNNING_SETTINGS.get().unwrap();
@@ -84,6 +93,7 @@ pub fn debug_extra_enabled() -> bool {
 ///8
 ///9
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 #[macro_export]
 macro_rules! trace {
     ($($arg:tt)*) => {
@@ -99,6 +109,7 @@ macro_rules! trace {
     };
 }
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 #[macro_export]
 macro_rules! debug {
     ($($arg:tt)*) => {
@@ -114,6 +125,7 @@ macro_rules! debug {
     };
 }
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 #[macro_export]
 macro_rules! debugx {
     ($($arg:tt)*) => {
@@ -130,6 +142,7 @@ macro_rules! debugx {
     };
 }
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 #[macro_export]
 macro_rules! info {
     ($($arg:tt)*) => {
@@ -145,6 +158,7 @@ macro_rules! info {
     };
 }
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 #[macro_export]
 macro_rules! warn {
     ($($arg:tt)*) => {
@@ -160,6 +174,7 @@ macro_rules! warn {
     };
 }
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 #[macro_export]
 macro_rules! error {
     ($($arg:tt)*) => {

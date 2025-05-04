@@ -4,10 +4,14 @@
 // cargo test --features native test_six -- --nocapture
 // Each test has to be run individually
 
+#[cfg(feature = "native")]
 use better_logger::LoggerSettings;
+#[cfg(feature = "native")]
 use better_logger::logger;
+#[cfg(feature = "native")]
 use better_logger::logger::*;
 
+#[cfg(feature = "native")]
 #[test]
 fn test_six() {
     let log_settings = LoggerSettings {
@@ -42,6 +46,7 @@ fn test_six() {
     logger::error!(r#"{}: sync Test Six"#, error);
 }
 
+#[cfg(feature = "native")]
 #[test]
 fn test_seven() {
     let log_settings = LoggerSettings {
@@ -76,6 +81,7 @@ fn test_seven() {
     logger::error!(r#"{}: sync Test Seven"#, error);
 }
 
+#[cfg(feature = "native")]
 #[test]
 fn test_eight() {
     let log_settings: LoggerSettings = LoggerSettings {
@@ -110,6 +116,7 @@ fn test_eight() {
     logger::error!(r#"{}: sync Test Eight"#, error);
 }
 
+#[cfg(feature = "native")]
 #[test]
 fn test_nine() {
     let log_settings = LoggerSettings {
@@ -144,6 +151,7 @@ fn test_nine() {
     logger::error!(r#"{}: sync Test Nine"#, error);
 }
 
+#[cfg(feature = "native")]
 #[test]
 fn test_ten() {
     let log_settings = LoggerSettings {

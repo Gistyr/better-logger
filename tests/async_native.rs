@@ -3,10 +3,14 @@
 // cargo test --features native test_one -- --nocapture
 // Each test has to be run individually
 
+#[cfg(feature = "native")]
 use better_logger::LoggerSettings;
+#[cfg(feature = "native")]
 use better_logger::logger::*;
+#[cfg(feature = "native")]
 use better_logger::logger;
 
+#[cfg(feature = "native")]
 #[tokio::test]
 async fn test_one() {
     let log_settings = LoggerSettings {
@@ -43,6 +47,7 @@ async fn test_one() {
     tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 }
 
+#[cfg(feature = "native")]
 #[tokio::test]
 async fn test_two() {
     let log_settings = LoggerSettings {
@@ -79,6 +84,7 @@ async fn test_two() {
     tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 }
 
+#[cfg(feature = "native")]
 #[tokio::test]
 async fn test_three() {
     let log_settings: LoggerSettings = LoggerSettings {
@@ -115,6 +121,7 @@ async fn test_three() {
     tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 }
 
+#[cfg(feature = "native")]
 #[tokio::test]
 async fn test_four() {
     let log_settings = LoggerSettings {
@@ -151,6 +158,7 @@ async fn test_four() {
     tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 }
 
+#[cfg(feature = "native")]
 #[tokio::test]
 async fn test_five() {
     let log_settings: LoggerSettings = LoggerSettings {

@@ -1,5 +1,6 @@
 // better-logger/src/interface/settings.rs
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 #[derive(Clone, Debug, PartialEq)]
 pub struct LoggerSettings {
     pub terminal_logs: bool,
@@ -26,8 +27,10 @@ pub struct LoggerSettings {
 ///8
 ///9
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 pub(crate) static RUNNING_SETTINGS: once_cell::sync::OnceCell<RunningSettings> = once_cell::sync::OnceCell::new();
 
+#[cfg(any(feature = "native", feature = "wasm"))]
 #[derive(Clone, Debug, PartialEq)]
 pub(crate) struct RunningSettings {
     pub(crate) terminal_logs: bool,
