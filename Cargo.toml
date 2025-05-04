@@ -1,17 +1,17 @@
 [package]
 name = "better-logger"
-version = "1.0.1"
+version = "1.0.2"
 edition = "2024"
 rust-version = "1.85.1"
 authors = ["Gistyr LLC <contact@gistyr.dev>"]
-description = "Flexible sync/async logger with console and file output"
+description = "Flexible sync/async logger with console, file, and HTTP output"
 readme = "README.md"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/Gistyr/better-logger"
 homepage = "https://github.com/Gistyr/better-logger"
 documentation = "https://docs.rs/better-logger"   
 keywords = ["logging", "async", "file", "console", "log"]
-categories = ["development-tools", "asynchronous"]
+categories = ["development-tools", "asynchronous", "logging"]
 exclude = ["tests/logs/*.log"]
 
 [dependencies]
