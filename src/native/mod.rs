@@ -4,3 +4,4 @@ pub(crate) mod log;
 pub(crate) mod auxiliary;
 
 pub(super) mod file;
+pub(super) mod networking;

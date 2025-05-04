@@ -83,3 +83,30 @@ pub(crate) fn initialize_file_logging(file_log_lvl: &str, log_file_path: &str) -
         }
     }
 }
+
+///0
+///1
+///2
+///3
+///4
+///5
+///6
+///7
+///8
+///9
+
+#[cfg(feature = "native")]
+pub(crate) fn initialize_network_logging(network_log_lvl: &str) -> Result<(), String> {
+    match network_log_lvl {
+        "trace" => {},
+        "debug" => {},
+        "info" => {},
+        "warn" => {},
+        "error" => {},
+        _ => {
+            return Err(format!(r#"better-logger: The "network_log_lvl" setting must match: "trace", "debug", "info", "warn", or "error""#));
+        }
+    }
+    
+    return Ok(());
+}

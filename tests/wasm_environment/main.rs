@@ -1,18 +1,18 @@
 // better-logger/tests/wasm_environment/main.rs
 
 // Edit Trunk.toml "address" and "port" to something that works for you
-// cargo build --target wasm32-unknown-unknown --bin wasm-test --features testing
+// cargo build --target wasm32-unknown-unknown --bin wasm-test --features testing-wasm
 // trunk build
 // trunk serve
 
-#[cfg(feature = "testing")]
+#[cfg(feature = "testing-wasm")]
 use better_logger::LoggerSettings;
-#[cfg(feature = "testing")]
+#[cfg(feature = "testing-wasm")]
 use better_logger::logger::*;
-#[cfg(feature = "testing")]
+#[cfg(feature = "testing-wasm")]
 use better_logger::logger;
 
-#[cfg(feature = "testing")]
+#[cfg(feature = "testing-wasm")]
 fn main() {
     let settings = LoggerSettings {
         terminal_logs: true,
@@ -21,6 +21,9 @@ fn main() {
         file_logs: false,
         file_log_lvl: "error".to_string(),
         log_file_path: "null".to_string(),
+        network_logs: true,
+        network_log_lvl: "trace".to_string(),
+        network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
         debug_extra: true,
         async_logging: true,
     };
@@ -33,7 +36,7 @@ fn main() {
     yew::Renderer::<App>::new().render();
 }
 
-#[cfg(feature = "testing")]
+#[cfg(feature = "testing-wasm")]
 #[yew::function_component(App)]
 pub fn app() -> yew::Html {
     let debug: &str = "DEBUG";

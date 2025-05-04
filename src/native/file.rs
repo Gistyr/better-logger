@@ -22,7 +22,7 @@ pub(crate) fn create_file(path: &str) -> std::io::Result<std::fs::File> {
 }
 
 #[cfg(feature = "native")]
-pub(crate) fn write_log_line(level: &str, target: &str, message: &str) -> std::io::Result<()> {
+pub(super) fn write_log_line(level: &str, target: &str, message: &str) -> std::io::Result<()> {
     let mutex_file: &std::sync::Mutex<std::fs::File> = {
         match LOG_FILE.get() {
             Some(file) => {

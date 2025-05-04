@@ -3,10 +3,14 @@
 // cargo test --features native test_one -- --nocapture
 // Each test has to be run individually
 
+#[cfg(feature = "native")]
 use better_logger::LoggerSettings;
+#[cfg(feature = "native")]
 use better_logger::logger::*;
+#[cfg(feature = "native")]
 use better_logger::logger;
 
+#[cfg(feature = "native")]
 #[tokio::test]
 async fn test_one() {
     let log_settings = LoggerSettings {
@@ -16,6 +20,9 @@ async fn test_one() {
         file_logs: true,
         file_log_lvl: "trace".to_string(),
         log_file_path: "tests/logs/test_one_async.log".to_string(),
+        network_logs: true,
+        network_log_lvl: "trace".to_string(),
+        network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
         debug_extra: true,
         async_logging: true,
     };
@@ -40,6 +47,7 @@ async fn test_one() {
     tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 }
 
+#[cfg(feature = "native")]
 #[tokio::test]
 async fn test_two() {
     let log_settings = LoggerSettings {
@@ -49,6 +57,9 @@ async fn test_two() {
         file_logs: true,
         file_log_lvl: "warn".to_string(),
         log_file_path: "tests/logs/test_two_async.log".to_string(),
+        network_logs: true,
+        network_log_lvl: "trace".to_string(),
+        network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
         debug_extra: true,
         async_logging: true,
     };
@@ -73,6 +84,7 @@ async fn test_two() {
     tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 }
 
+#[cfg(feature = "native")]
 #[tokio::test]
 async fn test_three() {
     let log_settings: LoggerSettings = LoggerSettings {
@@ -82,6 +94,9 @@ async fn test_three() {
         file_logs: false,
         file_log_lvl: "debug".to_string(),
         log_file_path: "tests/logs/test_three_async.log".to_string(),
+        network_logs: true,
+        network_log_lvl: "trace".to_string(),
+        network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
         debug_extra: false,
         async_logging: true,
     };
@@ -106,6 +121,7 @@ async fn test_three() {
     tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 }
 
+#[cfg(feature = "native")]
 #[tokio::test]
 async fn test_four() {
     let log_settings = LoggerSettings {
@@ -115,6 +131,9 @@ async fn test_four() {
         file_logs: true,
         file_log_lvl: "error".to_string(),
         log_file_path: "tests/logs/test_four_async.log".to_string(),
+        network_logs: true,
+        network_log_lvl: "trace".to_string(),
+        network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
         debug_extra: false,
         async_logging: true,
     };
@@ -139,6 +158,7 @@ async fn test_four() {
     tokio::time::sleep(std::time::Duration::from_millis(100)).await;
 }
 
+#[cfg(feature = "native")]
 #[tokio::test]
 async fn test_five() {
     let log_settings: LoggerSettings = LoggerSettings {
@@ -148,6 +168,9 @@ async fn test_five() {
         file_logs: true,
         file_log_lvl: "info".to_string(),
         log_file_path: "tests/logs/test_five_async.log".to_string(),
+        network_logs: true,
+        network_log_lvl: "trace".to_string(),
+        network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
         debug_extra: true,
         async_logging: true,
     };
