@@ -151,6 +151,76 @@ pub(crate) fn native_log_async(level: &str, msg: &str) {
             }
         });
     }
+
+    if running_settings.network_logs == true {
+        let network_set_log_level: String = running_settings.network_log_lvl.clone();
+        let given_message_level_three: String = level.to_string();
+        let given_message_three: String = msg.to_string();
+
+        tokio::task::spawn_blocking(move || {
+            let network_current_settings: u8 = {
+                match network_set_log_level.as_str() {
+                    "trace" => 0,
+                    "debug" => 1,
+                    "info" => 2,
+                    "warn" => 3,
+                    "error" => 4,
+                    _ => { 
+                        eprintln!(r#"better-logger (native_log_async): "network_current_settings" failed to match"#);
+                        panic!();
+                    }
+                }
+            };
+
+            let network_requested_message_level: u8 = {
+                match given_message_level_three.as_str() {
+                    "trace" => 0,
+                    "debug" => 1,
+                    "info" => 2,
+                    "warn" => 3,
+                    "error" => 4,
+                    _ => { 
+                        eprintln!(r#"better-logger (native_log_async): "given_message_level_three" failed to match"#);
+                        panic!();
+                    }
+                }
+            };
+
+            if network_requested_message_level >= network_current_settings {
+                match given_message_level_three.as_str() {
+                    "trace" => {
+                        if let Err(error) = send_log_line("TRACE", module_path!(), &given_message_three) {
+                            eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
+                        }
+                    },
+                    "debug" => {
+                        if let Err(error) = send_log_line("DEBUG", module_path!(), &given_message_three) {
+                            eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
+                        }
+                    },
+                    "info" => {
+                        if let Err(error) = send_log_line("INFO", module_path!(), &given_message_three) {
+                            eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
+                        }
+                    },
+                    "warn" => {
+                        if let Err(error) = send_log_line("WARN", module_path!(), &given_message_three) {
+                            eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
+                        }
+                    },
+                    "error" => {
+                        if let Err(error) = send_log_line("ERROR", module_path!(), &given_message_three) {
+                            eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
+                        }
+                    },
+                    _ => { 
+                        eprintln!(r#"better-logger (6)(native_log_sync): "level" failed to match"#);
+                        panic!();
+                    }
+                };
+            }
+        });
+    }
 }
 
 ///0

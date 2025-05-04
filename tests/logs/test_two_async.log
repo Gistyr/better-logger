@@ -1,0 +1,3 @@
+[2025-05-04T12:51:05Z WARN better_logger::native::log] Test Two: WARN and above, terminal and file
+[2025-05-04T12:51:05Z WARN better_logger::native::log] WARN: async Test Two
+[2025-05-04T12:51:05Z ERROR better_logger::native::log] ERROR: async Test Two
