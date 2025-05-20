@@ -9,8 +9,8 @@
 ## 😺 ONE: Declare Feature
 ```rust
 /* no default feature enabled (enabling both at once won't compile) */
-better-logger = { version = "1.0.1", features = ["native"] }
-better-logger = { version = "1.0.1", features = ["wasm"] }
+better-logger = { version = "1.0.3", features = ["native"] }
+better-logger = { version = "1.0.3", features = ["wasm"] }
 ```
 ## 💻 TWO: Settings
 ```rust
