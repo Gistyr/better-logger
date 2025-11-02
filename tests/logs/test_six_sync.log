@@ -1,7 +1,7 @@
-[2025-05-04T19:46:50Z TRACE sync_native] Test Six: TRACE and above, terminal and file
-[2025-05-04T19:46:50Z TRACE sync_native] TRACE: sync Test Six
-[2025-05-04T19:46:50Z DEBUG sync_native] DEBUG: async Test Six
-[2025-05-04T19:46:50Z DEBUG sync_native] DEBUGX: async Test Six
-[2025-05-04T19:46:50Z INFO sync_native] INFO: sync Test Six
-[2025-05-04T19:46:50Z WARN sync_native] WARN: sync Test Six
-[2025-05-04T19:46:50Z ERROR sync_native] ERROR: sync Test Six
+[2025-11-02T02:22:43Z TRACE sync_native] Test Six: TRACE and above, terminal and file
+[2025-11-02T02:22:43Z TRACE sync_native] TRACE: sync Test Six
+[2025-11-02T02:22:43Z DEBUG sync_native] DEBUG: async Test Six
+[2025-11-02T02:22:43Z DEBUG sync_native] DEBUGX: async Test Six
+[2025-11-02T02:22:43Z INFO sync_native] INFO: sync Test Six
+[2025-11-02T02:22:43Z WARN sync_native] WARN: sync Test Six
+[2025-11-02T02:22:43Z ERROR sync_native] ERROR: sync Test Six

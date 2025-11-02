@@ -10,6 +10,8 @@ use better_logger::LoggerSettings;
 use better_logger::logger;
 #[cfg(feature = "native")]
 use better_logger::logger::*;
+#[cfg(feature = "native")]
+use better_logger::NetworkFormat;
 
 #[cfg(feature = "native")]
 #[test]
@@ -24,6 +26,7 @@ fn test_six() {
         network_logs: true,
         network_log_lvl: "trace".to_string(),
         network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
+        network_format: NetworkFormat::PlainText, 
         debug_extra: true,
         async_logging: false,
     };
@@ -59,6 +62,7 @@ fn test_seven() {
         network_logs: true,
         network_log_lvl: "trace".to_string(),
         network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
+        network_format: NetworkFormat::PlainText, 
         debug_extra: true,
         async_logging: false,
     };
@@ -94,6 +98,7 @@ fn test_eight() {
         network_logs: true,
         network_log_lvl: "trace".to_string(),
         network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
+        network_format: NetworkFormat::PlainText, 
         debug_extra: false,
         async_logging: false,
     };
@@ -129,6 +134,7 @@ fn test_nine() {
         network_logs: true,
         network_log_lvl: "trace".to_string(),
         network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
+        network_format: NetworkFormat::PlainText, 
         debug_extra: false,
         async_logging: false,
     };
@@ -164,6 +170,7 @@ fn test_ten() {
         network_logs: true,
         network_log_lvl: "trace".to_string(),
         network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
+        network_format: NetworkFormat::PlainText, 
         debug_extra: true,
         async_logging: false,
     };

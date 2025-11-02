@@ -104,6 +104,7 @@ fn init_private(settings: LoggerSettings) -> Result<String, String> {
         network_logs: settings.network_logs,
         network_log_lvl: settings.network_log_lvl,
         network_endpoint_url: settings.network_endpoint_url,
+        network_format: settings.network_format,
         debug_extra: settings.debug_extra,
         async_logging: settings.async_logging,
     };

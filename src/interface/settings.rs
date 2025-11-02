@@ -2,6 +2,13 @@
 
 #[cfg(any(feature = "native", feature = "wasm"))]
 #[derive(Clone, Debug, PartialEq)]
+pub enum NetworkFormat {
+    PlainText,
+    JsonText { field: String },
+}
+
+#[cfg(any(feature = "native", feature = "wasm"))]
+#[derive(Clone, Debug, PartialEq)]
 pub struct LoggerSettings {
     pub terminal_logs: bool,
     pub terminal_log_lvl: String,
@@ -12,6 +19,7 @@ pub struct LoggerSettings {
     pub network_logs: bool,
     pub network_log_lvl: String,
     pub network_endpoint_url: String,
+    pub network_format: NetworkFormat,
     pub debug_extra: bool,
     pub async_logging: bool,
 }
@@ -41,6 +49,7 @@ pub(crate) struct RunningSettings {
     pub(crate) network_logs: bool,
     pub(crate) network_log_lvl: String,
     pub(crate) network_endpoint_url: String,
+    pub(crate) network_format: NetworkFormat,
     pub(crate) debug_extra: bool,
     pub(crate) async_logging: bool,
 }
