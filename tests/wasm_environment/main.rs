@@ -8,6 +8,8 @@
 #[cfg(feature = "testing-wasm")]
 use better_logger::LoggerSettings;
 #[cfg(feature = "testing-wasm")]
+use better_logger::NetworkFormat;
+#[cfg(feature = "testing-wasm")]
 use better_logger::logger::*;
 #[cfg(feature = "testing-wasm")]
 use better_logger::logger;
@@ -24,6 +26,7 @@ fn main() {
         network_logs: true,
         network_log_lvl: "trace".to_string(),
         network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
+        network_format: NetworkFormat::PlainText, 
         debug_extra: true,
         async_logging: true,
     };

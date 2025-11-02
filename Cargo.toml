@@ -32,7 +32,7 @@ serde_json = { version = "1.0.145", optional = true }
 
 [features]
 native = ["log", "once_cell", "env_logger", "tokio", "chrono", "ureq", "serde_json"]
-wasm = ["log", "once_cell", "wasm-logger", "web-sys", "wasm-bindgen-futures", "gloo-net", "js-sys"]
+wasm = ["log", "once_cell", "wasm-logger", "web-sys", "wasm-bindgen-futures", "gloo-net", "js-sys", "serde_json"]
 testing-wasm = ["yew", "wasm"]
 testing-http = ["tiny_http", "native"]
 
