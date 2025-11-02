@@ -9,8 +9,8 @@
 ## 😺 ONE: Declare Feature
 ```rust
 /* no default feature enabled (enabling both at once won't compile) */
-better-logger = { version = "1.0.3", features = ["native"] }
-better-logger = { version = "1.0.3", features = ["wasm"] }
+better-logger = { version = "2.0.1", features = ["native"] }
+better-logger = { version = "2.0.1", features = ["wasm"] }
 ```
 ## 💻 TWO: Settings
 ```rust
@@ -27,6 +27,7 @@ let settings = LoggerSettings {
     network_logs: true,
     network_log_lvl: "warn".to_string(),
     network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
+    network_format: NetworkFormat::JsonText { field: "text".into() },
     debug_extra: true,
     async_logging: false,
 };
@@ -42,6 +43,7 @@ let settings = LoggerSettings {
     network_logs: true,
     network_log_lvl: "trace".to_string(),
     network_endpoint_url: "https://my.domain.com".to_string(),
+    network_format: NetworkFormat::PlainText,
     debug_extra: true,
     async_logging: true, // if network_logs is true, async_logging must also be true 
 };
@@ -85,6 +87,7 @@ fn my_function() {
 | `log_file_path`          | Path to log file              |
 | `network_logs`           | Log to an HTTP endpoint       |
 | `network_log_lvl`        | Minimum level to send         |
+| `network_format`         | Network message format        |
 | `network_endpoint_url`   | URL to send log messages to   |
 | `debug_extra`            | Show `debugx!` logs           |
 | `async_logging`          | Enable async logging          |
@@ -122,7 +125,8 @@ It is just a second debug, the `debugx!()` logs will be labeled as `DEBUG` when 
 #### Why would I want to use `DEBUGX`?
 Let’s say you’re in development, so you want to see all your ``debug`` logs. However, some of your ``debug`` logs are massive and clutter your terminal.                                                                    
 You can mark those verbose logs as `debugx!()` and set `debug_extra = false` to hide them.                                      
-Later, if you're troubleshooting or need to view them, set `debug_extra = true` and see your extra debug logs!                  
+Later, if you're troubleshooting or need to view them, set `debug_extra = true` and see your extra debug logs!                           
+## How to use `NetworkFormat`            
 # 🎉 Contributing
 #### TODO:
 - Validate all user settings in the init function
