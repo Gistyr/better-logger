@@ -13,7 +13,7 @@ pub(super) fn send_log_line(level: &str, target: &str, message: &str) -> Result<
     let url = running_settings.network_endpoint_url.as_str();  
 
     let now = Local::now();
-    let timestamp = format!("{}", now.format("%Y-%m-%d_%H:%M:%S"));
+    let timestamp = format!("{}", now.format("%Y-%m-%d %H:%M:%S"));
     let header: String = format!("[{} {} {}]", timestamp, level.to_uppercase(), target);
     let line: String   = format!("{} {}", header, message);
 
