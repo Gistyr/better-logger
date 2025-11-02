@@ -1,5 +1,5 @@
 # BETTER-LOGGER
-### Full stack developement, one logger to rule them all
+### Full stack development, one logger to rule them all
 ✔️ **Native Environment**       
 ✔️ **WASM Environment**        
 ✔️ **Terminal Logging**               
@@ -14,7 +14,7 @@ better-logger = { version = "2.0.1", features = ["wasm"] }
 ```
 ## 💻 TWO: Settings
 ```rust
-use better_logger::LoggerSettings;
+use better_logger::{LoggerSettings, NetworkFormat};
 
 /* native settings */
 let settings = LoggerSettings {
@@ -111,7 +111,6 @@ fn my_function() {
     - It spawns a new async task on the current ([tokio](https://crates.io/crates/tokio)) runtime for each message
 - Network logging uses a **“fire and forget”** model
      - If your HTTP endpoint is down, [better-logger's](https://crates.io/crates/better-logger) will continue to run without issue
-- HTTP messages are sent as `Content-Type`: `text/plain; charset=utf-8`
 - Why is `synchronous` `network logging` NOT allowed `in WASM`? Browsers don’t allow blocking network I/O on the main thread
 - Why is `file logging` NOT allowed `in WASM`? Browsers can't talk to your file system
 - All macros use `format!()` under the hood, any string-like type is accepted
@@ -125,8 +124,18 @@ It is just a second debug, the `debugx!()` logs will be labeled as `DEBUG` when 
 #### Why would I want to use `DEBUGX`?
 Let’s say you’re in development, so you want to see all your ``debug`` logs. However, some of your ``debug`` logs are massive and clutter your terminal.                                                                    
 You can mark those verbose logs as `debugx!()` and set `debug_extra = false` to hide them.                                      
-Later, if you're troubleshooting or need to view them, set `debug_extra = true` and see your extra debug logs!                           
-## How to use `NetworkFormat`            
+Later, if you're troubleshooting or need to view them, set `debug_extra = true` and see your extra debug logs!                             
+## How to use `NetworkFormat`   
+- `PlainText` - Sends network logs as `text/plain`
+- `JsonText` - Sends network logs as `application/json`
+#### Integrating with external services
+Sending logs to JSON endpoints is easy, just set the expected `field`.                     
+- Slack: `NetworkFormat::JsonText { field: "text".into() }`
+- Discord: `{ field: "content".into() }`            
+- Generic: `{ field: "message".into() }`         
+**Note:**                   
+When using WASM in the browser, CORS will block requests to external domains such as `hooks.slack.com` or `discord.com`.                   
+To avoid this, your web client should send logs to a logging server on the same domain, which can then forward those logs to external services like Slack or Discord.                  
 # 🎉 Contributing
 #### TODO:
 - Validate all user settings in the init function
