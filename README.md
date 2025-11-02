@@ -125,7 +125,13 @@ It is just a second debug, the `debugx!()` logs will be labeled as `DEBUG` when 
 Let’s say you’re in development, so you want to see all your ``debug`` logs. However, some of your ``debug`` logs are massive and clutter your terminal.                                                                    
 You can mark those verbose logs as `debugx!()` and set `debug_extra = false` to hide them.                                      
 Later, if you're troubleshooting or need to view them, set `debug_extra = true` and see your extra debug logs!                             
-## How to use `NetworkFormat`   
+## How to use `NetworkFormat`     
+``` rust
+pub enum NetworkFormat {
+    PlainText,
+    JsonText { field: String },
+}
+```
 - `PlainText` - Sends network logs as `text/plain`
 - `JsonText` - Sends network logs as `application/json`
 #### Integrating with external services
@@ -144,6 +150,7 @@ To avoid this, your web client should send logs to a logging server on the same 
 - Append option for file logs
 - Native async logging without Tokio
 - Consolidation, optimization
+- Add more network formats
 - **This list is not exclusive, all ideas are welcome**
 # License
 &copy; 2025 Gistyr LLC               
