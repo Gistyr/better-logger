@@ -1,6 +1,6 @@
 [package]
 name = "better-logger"
-version = "2.0.1"
+version = "2.0.2"
 edition = "2024"
 rust-version = "1.85.1"
 authors = ["Gistyr LLC <contact@gistyr.dev>"]
