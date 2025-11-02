@@ -1,0 +1,23 @@
+/target
+Cargo.lock
+
+.gitignore
+.cargo_vcs_info.json
+.vscode/
+Cargo.toml.orig
+
+# Testing and examples
+/tests/
+/examples/
+/Trunk.toml
+
+# WASM build outputs
+/tests/wasm_environment/dist/
+/tests/wasm_environment/*.wasm
+/tests/wasm_environment/*.js
+/tests/wasm_environment/*.html
+
+# Temporary files
+*.log
+*.tmp
+*.bak
