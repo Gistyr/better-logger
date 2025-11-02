@@ -4,13 +4,16 @@
 use crate::interface::settings::{RUNNING_SETTINGS, CLIENT, NetworkFormat};
 #[cfg(feature = "native")]
 use serde_json::json;
+#[cfg(feature = "native")]
+use chrono::Local;
 
 #[cfg(feature = "native")]
 pub(super) fn send_log_line(level: &str, target: &str, message: &str) -> Result<(), String> {
     let running_settings = RUNNING_SETTINGS.get().unwrap();
     let url = running_settings.network_endpoint_url.as_str();  
 
-    let timestamp = chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true);
+    let now = Local::now();
+    let timestamp = format!("{}", now.format("%Y-%m-%d_%H:%M:%S"));
     let header: String = format!("[{} {} {}]", timestamp, level.to_uppercase(), target);
     let line: String   = format!("{} {}", header, message);
 
