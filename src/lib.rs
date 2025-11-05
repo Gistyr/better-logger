@@ -7,6 +7,7 @@ pub mod interface;
 pub(crate) mod native;
 #[cfg(feature = "wasm")]
 pub(crate) mod wasm;
+
 #[cfg(any(feature = "native", feature = "wasm"))]
 pub use interface::settings::LoggerSettings as LoggerSettings;
 #[cfg(any(feature = "native", feature = "wasm"))]

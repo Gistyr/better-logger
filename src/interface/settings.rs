@@ -36,7 +36,7 @@ pub struct LoggerSettings {
 ///9
 
 #[cfg(any(feature = "native", feature = "wasm"))]
-pub(crate) static RUNNING_SETTINGS: once_cell::sync::OnceCell<RunningSettings> = once_cell::sync::OnceCell::new();
+pub(crate) static RUNNING_SETTINGS: std::sync::OnceLock<RunningSettings> = std::sync::OnceLock::new();
 
 #[cfg(any(feature = "native", feature = "wasm"))]
 #[derive(Clone, Debug, PartialEq)]
@@ -55,7 +55,7 @@ pub(crate) struct RunningSettings {
 }
 
 #[cfg(feature = "native")]
-pub(crate) static LOG_FILE: once_cell::sync::OnceCell<std::sync::Mutex<std::fs::File>> = once_cell::sync::OnceCell::new();
+pub(crate) static LOG_FILE: std::sync::OnceLock<std::sync::Mutex<std::fs::File>> = std::sync::OnceLock::new();
 
 #[cfg(feature = "native")]
-pub(crate) static CLIENT: once_cell::sync::Lazy<ureq::Agent> = once_cell::sync::Lazy::new(|| ureq::agent());
+pub(crate) static CLIENT: std::sync::LazyLock<ureq::Agent> = std::sync::LazyLock::new(|| ureq::agent());
