@@ -11,8 +11,8 @@
 ## 😺 ONE: Declare Feature
 ```rust
 /* no default feature enabled (enabling both at once won't compile) */
-better-logger = { version = "2.0.1", features = ["native"] }
-better-logger = { version = "2.0.1", features = ["wasm"] }
+better-logger = { version = "2.1.2", features = ["native"] }
+better-logger = { version = "2.1.2", features = ["wasm"] }
 ```
 ## 💻 TWO: Settings
 ```rust
@@ -142,8 +142,22 @@ Sending logs to JSON endpoints is easy, just set the expected `field`.
 - Discord: `{ field: "content".into() }`            
 - Generic: `{ field: "message".into() }`                            
 # RELAY SERVER      
-When using WASM in the browser, CORS will block requests to external domains such as `hooks.slack.com` or `discord.com`.           
-To avoid this, your web client should send logs to a logging server on the same domain, which can then forward those logs to external services like Slack or Discord.       
+- When using WASM in the browser, CORS will block requests to external domains such as `hooks.slack.com` or `discord.com`.           
+- To avoid this, your web client should send logs to a logging server on the same domain, which can then forward those logs to external services like Slack or Discord.
+### See the working example: https://github.com/Lozlof/easy-log-forwarding
+## 😺 ONE: Declare Feature
+```rust
+better-logger = { version = "2.1.2", features = ["relay"] }
+/* if you want the relay server to also send logs, declare native as well */
+/* "relay" cannot run in a WASM environment */
+better-logger = { version = "2.1.1", features = ["relay", "native"] }
+```
+## 💻 TWO: Settings
+```rust
+```
+
+
+
 # 🎉 Contributing
 #### TODO:
 - Validate all user settings in the init function
@@ -153,6 +167,7 @@ To avoid this, your web client should send logs to a logging server on the same 
 - Native async logging without Tokio
 - Consolidation, optimization
 - Add more network formats
+- Increase `relay` features
 - **This list is not exclusive, all ideas are welcome**
 # License
 &copy; 2025 Gistyr LLC               
