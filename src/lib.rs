@@ -10,10 +10,14 @@ pub(crate) mod wasm;
 
 #[cfg(any(feature = "native", feature = "wasm"))]
 pub use interface::settings::LoggerSettings as LoggerSettings;
+#[cfg(any(feature = "relay"))]
+pub use interface::settings::RelaySettings as RelaySettings;
 #[cfg(any(feature = "native", feature = "wasm", feature = "relay"))]
 pub use interface::settings::NetworkFormat as NetworkFormat;
 #[cfg(any(feature = "native", feature = "wasm"))]
 pub use interface::logger as logger;
+#[cfg(any(feature = "relay"))]
+pub use interface::relay as relay;
 #[cfg(any(feature = "native", feature = "wasm"))]
 pub use interface::logger::init as init;
 

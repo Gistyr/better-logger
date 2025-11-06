@@ -6,6 +6,10 @@
 
 #[cfg(feature = "relay")]
 use better_logger::NetworkFormat;
+#[cfg(feature = "relay")]
+use better_logger::RelaySettings;
+#[cfg(feature = "relay")]
+use better_logger::relay;
 
 #[cfg(feature = "relay")]
 #[test]

@@ -59,3 +59,12 @@ pub(crate) static LOG_FILE: std::sync::OnceLock<std::sync::Mutex<std::fs::File>>
 
 #[cfg(feature = "native")]
 pub(crate) static CLIENT: std::sync::LazyLock<ureq::Agent> = std::sync::LazyLock::new(|| ureq::agent());
+
+#[cfg(feature = "relay")]
+#[derive(Clone, Debug, PartialEq)]
+pub struct RelaySettings {
+    pub listen_address: String,
+    pub output_format: NetworkFormat,
+    pub output_url: String,
+    pub cors_allowed_origins: Vec<String>,
+}
