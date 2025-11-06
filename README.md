@@ -5,7 +5,9 @@
 ✔️ **Terminal Logging**               
 ✔️ **File Logging**              
 ✔️ **Network Logging**           
+✔️ **Relay Server**               
 # HOW TO USE
+(If you want to use the `relay` feature, scroll to **RELAY SERVER**)
 ## 😺 ONE: Declare Feature
 ```rust
 /* no default feature enabled (enabling both at once won't compile) */
@@ -134,14 +136,14 @@ pub enum NetworkFormat {
 ```
 - `PlainText` - Sends network logs as `text/plain`
 - `JsonText` - Sends network logs as `application/json`
-#### Integrating with external services
+### Integrating with external services
 Sending logs to JSON endpoints is easy, just set the expected `field`.                     
 - Slack: `NetworkFormat::JsonText { field: "text".into() }`
 - Discord: `{ field: "content".into() }`            
-- Generic: `{ field: "message".into() }`         
-**Note:**                   
-When using WASM in the browser, CORS will block requests to external domains such as `hooks.slack.com` or `discord.com`.                   
-To avoid this, your web client should send logs to a logging server on the same domain, which can then forward those logs to external services like Slack or Discord.                  
+- Generic: `{ field: "message".into() }`                            
+# RELAY SERVER      
+When using WASM in the browser, CORS will block requests to external domains such as `hooks.slack.com` or `discord.com`.           
+To avoid this, your web client should send logs to a logging server on the same domain, which can then forward those logs to external services like Slack or Discord.       
 # 🎉 Contributing
 #### TODO:
 - Validate all user settings in the init function
