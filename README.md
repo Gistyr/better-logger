@@ -145,6 +145,8 @@ Sending logs to JSON endpoints is easy, just set the expected `field`.
 - When using WASM in the browser, CORS will block requests to external domains such as `hooks.slack.com` or `discord.com`.           
 - To avoid this, your web client should send logs to a logging server on the same domain, which can then forward those logs to external services like Slack or Discord.
 ### See the working example: https://github.com/Lozlof/easy-log-forwarding
+- This relay server runs on [actix-web](https://crates.io/crates/actix-web) and requires the [tokio runtime](https://crates.io/crates/tokio)
+- It is designed to be a standalone server
 ## 😺 ONE: Declare Feature
 ```rust
 better-logger = { version = "2.1.2", features = ["relay"] }
