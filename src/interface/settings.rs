@@ -1,6 +1,6 @@
 // better-logger/src/interface/settings.rs
 
-#[cfg(any(feature = "native", feature = "wasm"))]
+#[cfg(any(feature = "native", feature = "wasm", feature = "relay"))]
 #[derive(Clone, Debug, PartialEq)]
 pub enum NetworkFormat {
     PlainText,

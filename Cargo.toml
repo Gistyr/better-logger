@@ -33,6 +33,7 @@ serde_json = { version = "1.0.145", optional = true }
 [features]
 native = ["log", "env_logger", "tokio", "chrono", "ureq", "serde_json"]
 wasm = ["log", "wasm-logger", "web-sys", "wasm-bindgen-futures", "gloo-net", "js-sys", "serde_json"]
+relay = ["tiny_http", "ureq", "serde_json"]
 testing-wasm = ["yew", "wasm"]
 testing-http = ["tiny_http", "native"]
 
@@ -56,3 +57,7 @@ required-features = ["testing-http"]
 # cargo build --target wasm32-unknown-unknown --features wasm
 # cargo build --release --target wasm32-unknown-unknown --features wasm
 # cargo +stable build --release --target wasm32-unknown-unknown --features wasm
+
+# cargo build --target x86_64-unknown-linux-gnu --features relay
+# cargo build --release --target x86_64-unknown-linux-gnu --features relay
+# cargo +stable build --release --target x86_64-unknown-linux-gnu --features relay

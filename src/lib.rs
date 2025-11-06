@@ -1,6 +1,6 @@
 // better-logger/src/lib.rs
 
-#[cfg(any(feature = "native", feature = "wasm"))]
+#[cfg(any(feature = "native", feature = "wasm", feature = "relay"))]
 pub mod interface;
 
 #[cfg(feature = "native")]
@@ -10,7 +10,7 @@ pub(crate) mod wasm;
 
 #[cfg(any(feature = "native", feature = "wasm"))]
 pub use interface::settings::LoggerSettings as LoggerSettings;
-#[cfg(any(feature = "native", feature = "wasm"))]
+#[cfg(any(feature = "native", feature = "wasm", feature = "relay"))]
 pub use interface::settings::NetworkFormat as NetworkFormat;
 #[cfg(any(feature = "native", feature = "wasm"))]
 pub use interface::logger as logger;
