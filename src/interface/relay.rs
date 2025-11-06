@@ -3,7 +3,7 @@
 use actix_cors::Cors;
 use actix_web::{
     http::header::CONTENT_TYPE,
-    http::Method,                // <-- add this
+    http::Method,
     web, App, HttpRequest, HttpResponse, HttpServer, Responder,
 };
 use awc::Client;
@@ -78,15 +78,14 @@ async fn relay_post(
     };
 
     match forward_line(&client, &cfg.output_url, &cfg.output_format, &line).await {
-        Ok(_) => Ok(HttpResponse::Accepted().finish()),   // 202
-        Err(e) => Ok(HttpResponse::BadGateway().body(e)), // 502
+        Ok(_) => Ok(HttpResponse::Accepted().finish()),
+        Err(e) => Ok(HttpResponse::BadGateway().body(e)), 
     }
 }
 
-/// Start the relay **asynchronously**. This future resolves when the server stops.
-pub async fn start(cfg: RelaySettings) -> Result<(), String> {
-    let listen = cfg.listen_address.clone();
-    let cors_cfg = cfg.cors_allowed_origins.clone();
+pub async fn start(config: RelaySettings) -> Result<(), String> {
+    let listen = config.listen_address.clone();
+    let cors_cfg = config.cors_allowed_origins.clone();
 
     HttpServer::new(move || {
         let mut cors = Cors::default()
@@ -104,11 +103,10 @@ pub async fn start(cfg: RelaySettings) -> Result<(), String> {
 
         App::new()
             .wrap(cors)
-            .app_data(web::Data::new(cfg.clone()))
+            .app_data(web::Data::new(config.clone()))
             .app_data(web::Data::new(Client::default()))
             .route("/healthz", web::get().to(healthz))
             .route("/", web::post().to(relay_post))
-            // FIX: use .route().method(Method::OPTIONS) instead of web::options()
             .route("/", web::route().method(Method::OPTIONS).to(|| async {
                 HttpResponse::NoContent().finish()
             }))
