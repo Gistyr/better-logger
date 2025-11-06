@@ -19,6 +19,7 @@ async fn test_relay() {
         output_format: NetworkFormat::JsonText { field: "text".into() },
         output_url: "".to_string(),
         cors_allowed_origins: vec!["*".into()],
+        actix_workers: 1,
     };
 
     match relay::start(relay_settings).await {

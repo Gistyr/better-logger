@@ -84,8 +84,13 @@ async fn relay_post(
 }
 
 pub async fn start(config: RelaySettings) -> Result<(), String> {
-    let listen = config.listen_address.clone();
+    if config.actix_workers == 0 {
+        return Err("RelaySettings.workers must be >= 1".into());
+    }
+
+    let listen   = config.listen_address.clone();
     let cors_cfg = config.cors_allowed_origins.clone();
+    let workers  = config.actix_workers;
 
     HttpServer::new(move || {
         let mut cors = Cors::default()
@@ -111,6 +116,7 @@ pub async fn start(config: RelaySettings) -> Result<(), String> {
                 HttpResponse::NoContent().finish()
             }))
     })
+    .workers(workers) // NEW: set exact worker count
     .bind(listen.clone())
     .map_err(|e| format!("bind {} failed: {}", listen, e))?
     .run()
