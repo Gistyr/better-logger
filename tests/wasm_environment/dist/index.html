@@ -5,8 +5,8 @@
         <title>wasm-test</title>
         
 <script type="module">
-import init, * as bindings from '/wasm-test-ee7f385aac5baf7.js';
-const wasm = await init({ module_or_path: '/wasm-test-ee7f385aac5baf7_bg.wasm' });
+import init, * as bindings from '/wasm-test-4ad656a94d36ff01.js';
+const wasm = await init({ module_or_path: '/wasm-test-4ad656a94d36ff01_bg.wasm' });
 
 
 window.wasmBindings = bindings;
@@ -18,7 +18,7 @@ dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
         <style>
             html {font-size: 16px;}
         </style>
-    <link rel="modulepreload" href="/wasm-test-ee7f385aac5baf7.js" crossorigin="anonymous" integrity="sha384-9+lF4GNbXOkgcYGRCTZ7tJs1o5Dj5s+h22NIwrE5vdIkMDIOk7c83O+mB2wNl7jI"><link rel="preload" href="/wasm-test-ee7f385aac5baf7_bg.wasm" crossorigin="anonymous" integrity="sha384-d/CrsfB+rgvAI8UidjPf7IIzfiHr/iZ7DZXhY+rkm1lxrfNERRXW06+LuiVW/wRZ" as="fetch" type="application/wasm"></head>
+    <link rel="modulepreload" href="/wasm-test-4ad656a94d36ff01.js" crossorigin="anonymous" integrity="sha384-Fj4sl2orCSRNgboY2HsV1zB3xEPT2ZUVu22/AfhtBljbHcAKo9PxoX98xKIC2RgF"><link rel="preload" href="/wasm-test-4ad656a94d36ff01_bg.wasm" crossorigin="anonymous" integrity="sha384-tDs8O9hThXELoHDML89F6sYLu8/xXyWGMmHjtnfjK05h3dbsrqyG+FJg5UItBRii" as="fetch" type="application/wasm"></head>
     <body><script>"use strict";
 
 (function () {

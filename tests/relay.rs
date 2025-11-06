@@ -12,7 +12,17 @@ use better_logger::RelaySettings;
 use better_logger::relay;
 
 #[cfg(feature = "relay")]
-#[test]
-fn test_relay() {
+#[tokio::test]
+async fn test_relay() {
+    let relay_settings = RelaySettings {
+        listen_address: "0.0.0.0:8070".to_string(),
+        output_format: NetworkFormat::JsonText { field: "text".into() },
+        output_url: "".to_string(),
+        cors_allowed_origins: vec!["*".into()],
+    };
 
+    match relay::start(relay_settings).await {
+        Ok(_) => println!("Exit Ok"),
+        Err(error) => println!("Exit Err: {:?}", error),
+    }
 }

@@ -244,12 +244,12 @@ function makeClosure(arg0, arg1, dtor, f) {
     CLOSURE_DTORS.register(real, state, state);
     return real;
 }
-function wasm_bindgen__convert__closures_____invoke__h73fabae58047c16d(arg0, arg1, arg2) {
-    wasm.wasm_bindgen__convert__closures_____invoke__h73fabae58047c16d(arg0, arg1, arg2);
-}
-
 function wasm_bindgen__convert__closures________invoke__h6a75ae8373f7aabb(arg0, arg1, arg2) {
     wasm.wasm_bindgen__convert__closures________invoke__h6a75ae8373f7aabb(arg0, arg1, arg2);
+}
+
+function wasm_bindgen__convert__closures_____invoke__h73fabae58047c16d(arg0, arg1, arg2) {
+    wasm.wasm_bindgen__convert__closures_____invoke__h73fabae58047c16d(arg0, arg1, arg2);
 }
 
 function wasm_bindgen__convert__closures_____invoke__h6511326847879757(arg0, arg1) {

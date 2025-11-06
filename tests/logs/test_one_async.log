@@ -1,0 +1,7 @@
+[2025-11-06T16:20:05Z TRACE async_native] Test One: TRACE and above, terminal and file
+[2025-11-06T16:20:05Z TRACE async_native] TRACE: async Test One
+[2025-11-06T16:20:05Z DEBUG async_native] DEBUG: async Test One
+[2025-11-06T16:20:05Z DEBUG async_native] DEBUGX: async Test One
+[2025-11-06T16:20:05Z INFO async_native] INFO: async Test One
+[2025-11-06T16:20:05Z WARN async_native] WARN: async Test One
+[2025-11-06T16:20:05Z ERROR async_native] ERROR: async Test One
