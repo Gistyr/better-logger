@@ -7,7 +7,7 @@
 ✔️ **Network Logging**           
 ✔️ **Relay Server**               
 # HOW TO USE
-(If you want to use the `relay` feature, scroll to **RELAY SERVER**)
+#### If you want to use the `relay` feature, scroll down to **RELAY SERVER** 
 ## 😺 ONE: Declare Feature
 ```rust
 /* no default feature enabled (enabling both at once won't compile) */
@@ -144,22 +144,53 @@ Sending logs to JSON endpoints is easy, just set the expected `field`.
 # RELAY SERVER      
 - When using WASM in the browser, CORS will block requests to external domains such as `hooks.slack.com` or `discord.com`.           
 - To avoid this, your web client should send logs to a logging server on the same domain, which can then forward those logs to external services like Slack or Discord.
-### See the working example: https://github.com/Lozlof/easy-log-forwarding
-- This relay server runs on [actix-web](https://crates.io/crates/actix-web) and requires the [tokio runtime](https://crates.io/crates/tokio)
-- It is designed to be a standalone server
+## See the working example: https://github.com/Lozlof/easy-log-forwarding
 ## 😺 ONE: Declare Feature
 ```rust
 better-logger = { version = "2.1.2", features = ["relay"] }
 /* if you want the relay server to also send logs, declare native as well */
 /* "relay" cannot run in a WASM environment */
-better-logger = { version = "2.1.1", features = ["relay", "native"] }
+better-logger = { version = "2.1.2", features = ["relay", "native"] }
 ```
 ## 💻 TWO: Settings
 ```rust
+    use better_logger::{NetworkFormat, RelaySettings};
+
+    let settings = RelaySettings {
+        listen_address: "0.0.0.0:8070".to_string(),
+        output_format: NetworkFormat::JsonText { field: "text".into() },
+        output_url: "https://logs.mydomain.com".to_string(),
+        cors_allowed_origins: vec!["*".into()],
+        actix_workers: 1,
+    };
 ```
+## 💡 THREE: start
+```rust
+use better_logger::relay;
 
-
-
+#[tokio::main]
+async fn main() {
+    if let Err(err) = relay::start(settings).await {
+        eprintln!("{:?}", err);
+        std::process::exit(1);
+    }
+}
+```
+| SETTING                  | DESCRIPTION                   |   
+|--------------------------|-------------------------------|
+| `listen_address`         | The socket to listen on       |
+| `output_format`          | See NetworkFormat above       |
+| `output_url`             | Logs are forwarded to here    | 
+| `cors_allowed_origins`   | Domains allowed (CORS)        |
+| `actix_workers`          | Number of Actix worker threads|
+#### NOTE: Send log messages to the relay server as `NetworkFormat::PlainText`, it does not accept incoming `NetworkFormat::JsonText`
+It can output as either option           
+## More relay server info
+- This relay server runs on [actix-web](https://crates.io/crates/actix-web) and requires the [tokio runtime](https://crates.io/crates/tokio)
+- It is designed to be a standalone server
+- In [actix-web](https://crates.io/crates/actix-web), each worker thread is an independent thread that runs the full Actix runtime.
+- `cors_allowed_origins: vec!["*".into()]` allows all origins.
+    - Specify a specific URL to restrict access.
 # 🎉 Contributing
 #### TODO:
 - Validate all user settings in the init function
