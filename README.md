@@ -11,8 +11,8 @@
 ## 😺 ONE: Declare Feature
 ```rust
 /* no default feature enabled (enabling both at once won't compile) */
-better-logger = { version = "2.1.2", features = ["native"] }
-better-logger = { version = "2.1.2", features = ["wasm"] }
+better-logger = { version = "2.1.5", features = ["native"] }
+better-logger = { version = "2.1.5", features = ["wasm"] }
 ```
 ## 💻 TWO: Settings
 ```rust
@@ -147,10 +147,10 @@ Sending logs to JSON endpoints is easy, just set the expected `field`.
 ## See the working example: https://github.com/Lozlof/easy-log-forwarding
 ## 😺 ONE: Declare Feature
 ```rust
-better-logger = { version = "2.1.2", features = ["relay"] }
+better-logger = { version = "2.1.5", features = ["relay"] }
 /* if you want the relay server to also send logs, declare native as well */
 /* "relay" cannot run in a WASM environment */
-better-logger = { version = "2.1.2", features = ["relay", "native"] }
+better-logger = { version = "2.1.5", features = ["relay", "native"] }
 ```
 ## 💻 TWO: Settings
 ```rust
@@ -203,7 +203,7 @@ It can output as either option
 - Increase `relay` features
 - **This list is not exclusive, all ideas are welcome**
 # License
-&copy; 2025 Gistyr LLC               
+&copy; 2026 Gistyr LLC               
 This project, **better-logger**, is dual-licensed under your choice of:
 - **Apache License 2.0**  
   See the [LICENSE-APACHE](LICENSE-APACHE) file or view it online at <http://www.apache.org/licenses/LICENSE-2.0>
