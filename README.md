@@ -209,3 +209,4 @@ This project, **better-logger**, is dual-licensed under your choice of:
   See the [LICENSE-APACHE](LICENSE-APACHE) file or view it online at <http://www.apache.org/licenses/LICENSE-2.0>
 - **MIT License**  
   See the [LICENSE-MIT](LICENSE-MIT) file or view it online at <http://opensource.org/licenses/MIT>
+# [betterlogger.dev](https://betterlogger.dev)
