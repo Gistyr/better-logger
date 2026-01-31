@@ -16,7 +16,12 @@ better-logger = { version = "2.1.6", features = ["wasm"] }
 ```
 ## 💻 TWO: Settings
 ```rust
-use better_logger::{LoggerSettings, NetworkFormat};
+use better_logger::{
+    LoggerSettings, 
+    NetworkFormat
+    NetworkEndpointUrl, 
+    Single, Multiple,
+};
 
 /* native settings */
 let settings = LoggerSettings {
@@ -28,10 +33,19 @@ let settings = LoggerSettings {
     log_file_path: "/path/to/my/file.log".to_string(),
     network_logs: true,
     network_log_lvl: "warn".to_string(),
-    network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
-    network_format: NetworkFormat::JsonText { field: "text".into() },
+    network_endpoint_url: NetworkEndpointUrl::Single(Single { url: "http://127.0.0.1:8090/".to_string() }),
+    network_format: NetworkFormat::PlainText,
     debug_extra: true,
     async_logging: false,
+};
+
+let endpoints = Multiple {
+    trace: "http://0.0.0.0:8070/trace".to_string(),
+    debug: "https://hooks.slack.com/services/TTT/000/XXX".to_string(),
+    debugx: "https://hooks.slack.com/services/TTT/000/XXX".to_string(),
+    info: "http://127.0.0.1:8090/".to_string(),
+    warn: "http://127.0.0.1:8090/".to_string(),
+    error: "https://discord.com/api/webhooks/123/abc".to_string(),
 };
 
 /* wasm settings */
@@ -44,8 +58,8 @@ let settings = LoggerSettings {
     log_file_path: "".to_string(), // value doesn't matter
     network_logs: true,
     network_log_lvl: "trace".to_string(),
-    network_endpoint_url: "https://my.domain.com".to_string(),
-    network_format: NetworkFormat::PlainText,
+    network_endpoint_url: NetworkEndpointUrl::Multiple(endpoints),
+    network_format: NetworkFormat::JsonText { field: "text".into() },
     debug_extra: true,
     async_logging: true, // if network_logs is true, async_logging must also be true 
 };

@@ -15,10 +15,21 @@ use better_logger::NetworkFormat;
 use better_logger::NetworkEndpointUrl;
 #[cfg(feature = "native")]
 use better_logger::Single;
+#[cfg(feature = "native")]
+use better_logger::Multiple;
 
 #[cfg(feature = "native")]
 #[tokio::test]
 async fn test_one() {
+    let endpoints = Multiple {
+        trace: "http://0.0.0.0:8070/trace".to_string(),
+        debug: "https://hooks.slack.com/services/TTT/000/XXX".to_string(),
+        debugx: "https://hooks.slack.com/services/TTT/000/XXX".to_string(),
+        info: "http://127.0.0.1:8090/".to_string(),
+        warn: "http://127.0.0.1:8090/".to_string(),
+        error: "https://discord.com/api/webhooks/123/abc".to_string(),
+    };
+
     let log_settings = LoggerSettings {
         terminal_logs: true,
         terminal_log_lvl: "trace".to_string(),
@@ -28,8 +39,8 @@ async fn test_one() {
         log_file_path: "tests/logs/test_one_async.log".to_string(),
         network_logs: true,
         network_log_lvl: "trace".to_string(),
-        network_endpoint_url: NetworkEndpointUrl::Single(Single { url: "http://0.0.0.0:8070/".to_string() }),
-        network_format: NetworkFormat::PlainText, 
+        network_endpoint_url: NetworkEndpointUrl::Multiple(endpoints),
+        network_format: NetworkFormat::JsonText { field: "text".into() },
         debug_extra: true,
         async_logging: true,
     };
