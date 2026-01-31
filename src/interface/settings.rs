@@ -9,13 +9,13 @@ pub enum NetworkFormat {
 
 #[cfg(any(feature = "native", feature = "wasm"))]
 #[derive(Clone, Debug, PartialEq)]
-pub struct Single {
+pub struct SingleNet {
     pub url: String,
 }
 
 #[cfg(any(feature = "native", feature = "wasm"))]
 #[derive(Clone, Debug, PartialEq)]
-pub struct Multiple {
+pub struct MultipleNet {
     pub trace: String,
     pub debug: String,
     pub debugx: String,
@@ -27,8 +27,8 @@ pub struct Multiple {
 #[cfg(any(feature = "native", feature = "wasm"))]
 #[derive(Clone, Debug, PartialEq)]
 pub enum NetworkEndpointUrl {
-    Single(Single),
-    Multiple(Multiple),
+    Single(SingleNet),
+    Multiple(MultipleNet),
 }
 
 #[cfg(any(feature = "native", feature = "wasm"))]

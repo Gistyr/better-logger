@@ -17,9 +17,9 @@ pub use interface::settings::NetworkFormat as NetworkFormat;
 #[cfg(any(feature = "native", feature = "wasm"))]
 pub use interface::settings::NetworkEndpointUrl as NetworkEndpointUrl;
 #[cfg(any(feature = "native", feature = "wasm"))]
-pub use interface::settings::Single as Single;
+pub use interface::settings::SingleNet as SingleNet;
 #[cfg(any(feature = "native", feature = "wasm"))]
-pub use interface::settings::Multiple as Multiple;
+pub use interface::settings::MultipleNet as MultipleNet;
 #[cfg(any(feature = "native", feature = "wasm"))]
 pub use interface::logger as logger;
 #[cfg(any(feature = "relay"))]

@@ -18,9 +18,10 @@ better-logger = { version = "2.1.6", features = ["wasm"] }
 ```rust
 use better_logger::{
     LoggerSettings, 
-    NetworkFormat
+    NetworkFormat,
     NetworkEndpointUrl, 
-    Single, Multiple,
+    SingleNet,
+    MultipleNet,
 };
 
 /* native settings */
@@ -33,13 +34,13 @@ let settings = LoggerSettings {
     log_file_path: "/path/to/my/file.log".to_string(),
     network_logs: true,
     network_log_lvl: "warn".to_string(),
-    network_endpoint_url: NetworkEndpointUrl::Single(Single { url: "http://127.0.0.1:8090/".to_string() }),
+    network_endpoint_url: NetworkEndpointUrl::Single(SingleNet { url: "http://127.0.0.1:8090/".to_string() }),
     network_format: NetworkFormat::PlainText,
     debug_extra: true,
     async_logging: false,
 };
 
-let endpoints = Multiple {
+let endpoints = MultipleNet {
     trace: "http://0.0.0.0:8070/trace".to_string(),
     debug: "https://hooks.slack.com/services/TTT/000/XXX".to_string(),
     debugx: "https://hooks.slack.com/services/TTT/000/XXX".to_string(),
@@ -58,7 +59,7 @@ let settings = LoggerSettings {
     log_file_path: "".to_string(), // value doesn't matter
     network_logs: true,
     network_log_lvl: "trace".to_string(),
-    network_endpoint_url: NetworkEndpointUrl::Multiple(endpoints),
+    network_endpoint_url: NetworkEndpointUrl::MultipleNet(endpoints),
     network_format: NetworkFormat::JsonText { field: "text".into() },
     debug_extra: true,
     async_logging: true, // if network_logs is true, async_logging must also be true 
@@ -93,20 +94,20 @@ fn my_function() {
 }
 ```
 `trace!` ➡️ (`debug!`, `debugx!`) ➡️ `info!` ➡️ `warn!` ➡️ `error!`
-| SETTING                  | DESCRIPTION                   |   
-|--------------------------|-------------------------------|
-| `terminal_logs`          | Log to terminal               |
-| `terminal_log_lvl`       | Minimum level to display      |
-| `wasm_logging`           | Log to dev tools console      | 
-| `file_logs`              | Log to file                   |
-| `file_log_lvl`           | Minimum level to write        |
-| `log_file_path`          | Path to log file              |
-| `network_logs`           | Log to an HTTP endpoint       |
-| `network_log_lvl`        | Minimum level to send         |
-| `network_format`         | Network message format        |
-| `network_endpoint_url`   | URL to send log messages to   |
-| `debug_extra`            | Show `debugx!` logs           |
-| `async_logging`          | Enable async logging          |
+| SETTING                  | DESCRIPTION                      |   
+|--------------------------|----------------------------------|
+| `terminal_logs`          | Log to terminal                  |
+| `terminal_log_lvl`       | Minimum level to display         |
+| `wasm_logging`           | Log to dev tools console         | 
+| `file_logs`              | Log to file                      |
+| `file_log_lvl`           | Minimum level to write           |
+| `log_file_path`          | Path to log file                 |
+| `network_logs`           | Log to an HTTP endpoint          |
+| `network_log_lvl`        | Minimum level to send            |
+| `network_format`         | Network message format           |
+| `network_endpoint_url`   | URL(s) to send log messages to   |
+| `debug_extra`            | Show `debugx!` logs              |
+| `async_logging`          | Enable async logging             |
 # ℹ️ INFORMATION
 - NATIVE console logging uses [env_logger](https://crates.io/crates/env_logger)
 - WASM console logging uses [wasm-logger](https://crates.io/crates/wasm-logger)
@@ -154,7 +155,27 @@ pub enum NetworkFormat {
 Sending logs to JSON endpoints is easy, just set the expected `field`.                     
 - Slack: `NetworkFormat::JsonText { field: "text".into() }`
 - Discord: `{ field: "content".into() }`            
-- Generic: `{ field: "message".into() }`                            
+- Generic: `{ field: "message".into() }`
+## How to use `NetworkEndpointUrl`
+```rust
+pub enum NetworkEndpointUrl {
+    Single(SingleNet),
+    Multiple(MultipleNet),
+}
+pub struct SingleNet {
+    pub url: String,
+}
+pub struct MultipleNet {
+    pub trace: String,
+    pub debug: String,
+    pub debugx: String,
+    pub info: String,
+    pub warn: String,
+    pub error: String,
+}
+```     
+If you want all your log levels to hit one endpoint, use `SingleNet`.         
+If you have multiple endpoints, use `MultipleNet`.                     
 # RELAY SERVER      
 - When using WASM in the browser, CORS will block requests to external domains such as `hooks.slack.com` or `discord.com`.           
 - To avoid this, your web client should send logs to a logging server on the same domain, which can then forward those logs to external services like Slack or Discord.
