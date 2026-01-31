@@ -33,6 +33,7 @@ pub(crate) fn native_log_async(level: &str, target: &str, msg: &str) {
                     match terminal_set_log_level.as_str() {
                     "trace" => 0,
                     "debug" => 1,
+                    "debugx" => 1,
                     "info" => 2,
                     "warn" => 3,
                     "error" => 4,
@@ -47,6 +48,7 @@ pub(crate) fn native_log_async(level: &str, target: &str, msg: &str) {
                 match given_message_level_one.as_str() {
                     "trace" => 0,
                     "debug" => 1,
+                    "debugx" => 1,
                     "info" => 2,
                     "warn" => 3,
                     "error" => 4,
@@ -62,7 +64,7 @@ pub(crate) fn native_log_async(level: &str, target: &str, msg: &str) {
                     "trace" => {
                         log::trace!(target: &target_one, "{}", given_message_one);
                     },
-                    "debug" => {
+                    "debug" | "debugx" => {
                         log::debug!(target: &target_one, "{}", given_message_one);
                     },
                     "info" => {
@@ -94,6 +96,7 @@ pub(crate) fn native_log_async(level: &str, target: &str, msg: &str) {
                 match file_set_log_level.as_str() {
                     "trace" => 0,
                     "debug" => 1,
+                    "debugx" => 1,
                     "info" => 2,
                     "warn" => 3,
                     "error" => 4,
@@ -108,6 +111,7 @@ pub(crate) fn native_log_async(level: &str, target: &str, msg: &str) {
                 match given_message_level_two.as_str() {
                     "trace" => 0,
                     "debug" => 1,
+                    "debugx" => 1,
                     "info" => 2,
                     "warn" => 3,
                     "error" => 4,
@@ -125,7 +129,7 @@ pub(crate) fn native_log_async(level: &str, target: &str, msg: &str) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
                     },
-                    "debug" => {
+                    "debug" | "debugx" => {
                         if let Err(error) = write_log_line("DEBUG", &target_two, &given_message_two) {
                             eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                         }
@@ -165,6 +169,7 @@ pub(crate) fn native_log_async(level: &str, target: &str, msg: &str) {
                 match network_set_log_level.as_str() {
                     "trace" => 0,
                     "debug" => 1,
+                    "debugx" => 1,
                     "info" => 2,
                     "warn" => 3,
                     "error" => 4,
@@ -179,6 +184,7 @@ pub(crate) fn native_log_async(level: &str, target: &str, msg: &str) {
                 match given_message_level_three.as_str() {
                     "trace" => 0,
                     "debug" => 1,
+                    "debugx" => 1,
                     "info" => 2,
                     "warn" => 3,
                     "error" => 4,
@@ -190,37 +196,9 @@ pub(crate) fn native_log_async(level: &str, target: &str, msg: &str) {
             };
 
             if network_requested_message_level >= network_current_settings {
-                match given_message_level_three.as_str() {
-                    "trace" => {
-                        if let Err(error) = send_log_line("TRACE", &target_three, &given_message_three) {
-                            eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
-                        }
-                    },
-                    "debug" => {
-                        if let Err(error) = send_log_line("DEBUG", &target_three, &given_message_three) {
-                            eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
-                        }
-                    },
-                    "info" => {
-                        if let Err(error) = send_log_line("INFO", &target_three, &given_message_three) {
-                            eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
-                        }
-                    },
-                    "warn" => {
-                        if let Err(error) = send_log_line("WARN", &target_three, &given_message_three) {
-                            eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
-                        }
-                    },
-                    "error" => {
-                        if let Err(error) = send_log_line("ERROR", &target_three, &given_message_three) {
-                            eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
-                        }
-                    },
-                    _ => { 
-                        eprintln!(r#"better-logger (6)(native_log_sync): "level" failed to match"#);
-                        panic!();
-                    }
-                };
+                if let Err(error) = send_log_line(&given_message_level_three, &target_three, &given_message_three) {
+                    eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
+                }
             }
         });
     }
@@ -246,6 +224,7 @@ pub(crate) fn native_log_sync(level: &str, target: &str, msg: &str) {
                 match running_settings.terminal_log_lvl.as_str() {
                 "trace" => 0,
                 "debug" => 1,
+                "debugx" => 1,
                 "info" => 2,
                 "warn" => 3,
                 "error" => 4,
@@ -260,6 +239,7 @@ pub(crate) fn native_log_sync(level: &str, target: &str, msg: &str) {
             match level {
                 "trace" => 0,
                 "debug" => 1,
+                "debugx" => 1,
                 "info" => 2,
                 "warn" => 3,
                 "error" => 4,
@@ -275,7 +255,7 @@ pub(crate) fn native_log_sync(level: &str, target: &str, msg: &str) {
                 "trace" => {
                     log::trace!(target: target, "{}", msg);
                 },
-                "debug" => {
+                "debug" | "debugx" => {
                     log::debug!(target: target, "{}", msg);
                 },
                 "info" => {
@@ -300,6 +280,7 @@ pub(crate) fn native_log_sync(level: &str, target: &str, msg: &str) {
             match running_settings.file_log_lvl.as_str() {
                 "trace" => 0,
                 "debug" => 1,
+                "debugx" => 1,
                 "info" => 2,
                 "warn" => 3,
                 "error" => 4,
@@ -314,6 +295,7 @@ pub(crate) fn native_log_sync(level: &str, target: &str, msg: &str) {
             match level {
                 "trace" => 0,
                 "debug" => 1,
+                "debugx" => 1,
                 "info" => 2,
                 "warn" => 3,
                 "error" => 4,
@@ -331,7 +313,7 @@ pub(crate) fn native_log_sync(level: &str, target: &str, msg: &str) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
                 },
-                "debug" => {
+                "debug" | "debugx" => {
                     if let Err(error) = write_log_line("DEBUG", target, &msg) {
                         eprintln!(r#"better-logger: Failed to write line to log file. Error: {}"#, error);
                     }
@@ -364,6 +346,7 @@ pub(crate) fn native_log_sync(level: &str, target: &str, msg: &str) {
             match running_settings.network_log_lvl.as_str() {
                 "trace" => 0,
                 "debug" => 1,
+                "debugx" => 1,
                 "info" => 2,
                 "warn" => 3,
                 "error" => 4,
@@ -378,6 +361,7 @@ pub(crate) fn native_log_sync(level: &str, target: &str, msg: &str) {
             match level {
                 "trace" => 0,
                 "debug" => 1,
+                "debugx" => 1,
                 "info" => 2,
                 "warn" => 3,
                 "error" => 4,
@@ -389,37 +373,9 @@ pub(crate) fn native_log_sync(level: &str, target: &str, msg: &str) {
         };
 
         if network_requested_message_level >= network_current_settings {
-            match level {
-                "trace" => {
-                    if let Err(error) = send_log_line("TRACE", target, &msg) {
-                        eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
-                    }
-                },
-                "debug" => {
-                    if let Err(error) = send_log_line("DEBUG", target, &msg) {
-                        eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
-                    }
-                },
-                "info" => {
-                    if let Err(error) = send_log_line("INFO", target, &msg) {
-                        eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
-                    }
-                },
-                "warn" => {
-                    if let Err(error) = send_log_line("WARN", target, &msg) {
-                        eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
-                    }
-                },
-                "error" => {
-                    if let Err(error) = send_log_line("ERROR", target, &msg) {
-                        eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
-                    }
-                },
-                _ => { 
-                    eprintln!(r#"better-logger (6)(native_log_sync): "level" failed to match"#);
-                    panic!();
-                }
-            };
+            if let Err(error) = send_log_line(level, target, &msg) {
+                eprintln!(r#"better-logger: Failed to send line over http. Error: {}"#, error);
+            }
         }
     }
 }

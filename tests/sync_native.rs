@@ -12,6 +12,10 @@ use better_logger::logger;
 use better_logger::logger::*;
 #[cfg(feature = "native")]
 use better_logger::NetworkFormat;
+#[cfg(feature = "native")]
+use better_logger::NetworkEndpointUrl;
+#[cfg(feature = "native")]
+use better_logger::Single;
 
 #[cfg(feature = "native")]
 #[test]
@@ -25,7 +29,7 @@ fn test_six() {
         log_file_path: "tests/logs/test_six_sync.log".to_string(),
         network_logs: true,
         network_log_lvl: "trace".to_string(),
-        network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
+        network_endpoint_url: NetworkEndpointUrl::Single(Single { url: "http://127.0.0.1:8090/".to_string() }),
         network_format: NetworkFormat::PlainText, 
         debug_extra: true,
         async_logging: false,
@@ -61,7 +65,7 @@ fn test_seven() {
         log_file_path: "tests/logs/test_seven_sync.log".to_string(),
         network_logs: true,
         network_log_lvl: "trace".to_string(),
-        network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
+        network_endpoint_url: NetworkEndpointUrl::Single(Single { url: "http://127.0.0.1:8090/".to_string() }),
         network_format: NetworkFormat::PlainText, 
         debug_extra: true,
         async_logging: false,
@@ -97,7 +101,7 @@ fn test_eight() {
         log_file_path: "tests/logs/test_eight_sync.log".to_string(),
         network_logs: true,
         network_log_lvl: "trace".to_string(),
-        network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
+        network_endpoint_url: NetworkEndpointUrl::Single(Single { url: "http://127.0.0.1:8090/".to_string() }),
         network_format: NetworkFormat::PlainText, 
         debug_extra: false,
         async_logging: false,
@@ -133,7 +137,7 @@ fn test_nine() {
         log_file_path: "tests/logs/test_nine_sync.log".to_string(),
         network_logs: true,
         network_log_lvl: "trace".to_string(),
-        network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
+        network_endpoint_url: NetworkEndpointUrl::Single(Single { url: "http://127.0.0.1:8090/".to_string() }),
         network_format: NetworkFormat::PlainText, 
         debug_extra: false,
         async_logging: false,
@@ -169,7 +173,7 @@ fn test_ten() {
         log_file_path: "tests/logs/test_ten_sync.log".to_string(),
         network_logs: true,
         network_log_lvl: "trace".to_string(),
-        network_endpoint_url: "http://127.0.0.1:8090/".to_string(),
+        network_endpoint_url: NetworkEndpointUrl::Single(Single { url: "http://127.0.0.1:8090/".to_string() }),
         network_format: NetworkFormat::PlainText, 
         debug_extra: true,
         async_logging: false,

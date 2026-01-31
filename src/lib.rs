@@ -15,6 +15,12 @@ pub use interface::settings::RelaySettings as RelaySettings;
 #[cfg(any(feature = "native", feature = "wasm", feature = "relay"))]
 pub use interface::settings::NetworkFormat as NetworkFormat;
 #[cfg(any(feature = "native", feature = "wasm"))]
+pub use interface::settings::NetworkEndpointUrl as NetworkEndpointUrl;
+#[cfg(any(feature = "native", feature = "wasm"))]
+pub use interface::settings::Single as Single;
+#[cfg(any(feature = "native", feature = "wasm"))]
+pub use interface::settings::Multiple as Multiple;
+#[cfg(any(feature = "native", feature = "wasm"))]
 pub use interface::logger as logger;
 #[cfg(any(feature = "relay"))]
 pub use interface::relay as relay;
@@ -144,9 +150,9 @@ macro_rules! debugx {
                 let target = module_path!();
                 let message = format!($($arg)*);
                 if $crate::is_async() == true {
-                    $crate::log_async("debug", target, &message);
+                    $crate::log_async("debugx", target, &message);
                 } else {
-                    $crate::log_sync("debug", target, &message);
+                    $crate::log_sync("debugx", target, &message);
                 }
             }
         }

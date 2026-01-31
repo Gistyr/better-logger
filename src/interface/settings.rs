@@ -9,6 +9,30 @@ pub enum NetworkFormat {
 
 #[cfg(any(feature = "native", feature = "wasm"))]
 #[derive(Clone, Debug, PartialEq)]
+pub struct Single {
+    pub url: String,
+}
+
+#[cfg(any(feature = "native", feature = "wasm"))]
+#[derive(Clone, Debug, PartialEq)]
+pub struct Multiple {
+    pub trace: String,
+    pub debug: String,
+    pub debugx: String,
+    pub info: String,
+    pub warn: String,
+    pub error: String,
+}
+
+#[cfg(any(feature = "native", feature = "wasm"))]
+#[derive(Clone, Debug, PartialEq)]
+pub enum NetworkEndpointUrl {
+    Single(Single),
+    Multiple(Multiple),
+}
+
+#[cfg(any(feature = "native", feature = "wasm"))]
+#[derive(Clone, Debug, PartialEq)]
 pub struct LoggerSettings {
     pub terminal_logs: bool,
     pub terminal_log_lvl: String,
@@ -18,7 +42,7 @@ pub struct LoggerSettings {
     pub log_file_path: String,
     pub network_logs: bool,
     pub network_log_lvl: String,
-    pub network_endpoint_url: String,
+    pub network_endpoint_url: NetworkEndpointUrl,
     pub network_format: NetworkFormat,
     pub debug_extra: bool,
     pub async_logging: bool,
@@ -48,7 +72,7 @@ pub(crate) struct RunningSettings {
     pub(crate) file_log_lvl: String,
     pub(crate) network_logs: bool,
     pub(crate) network_log_lvl: String,
-    pub(crate) network_endpoint_url: String,
+    pub(crate) network_endpoint_url: NetworkEndpointUrl,
     pub(crate) network_format: NetworkFormat,
     pub(crate) debug_extra: bool,
     pub(crate) async_logging: bool,

@@ -72,10 +72,11 @@ async fn relay_post(
     let line = match read_plaintext_line(&req, &body) {
         Ok(s) => s,
         Err((code, msg)) => {
-            return Ok(
-                HttpResponse::build(actix_web::http::StatusCode::from_u16(code).unwrap())
-                    .body(msg)
-            );
+            let status = match actix_web::http::StatusCode::from_u16(code) {
+                Ok(status) => status,
+                Err(_) => actix_web::http::StatusCode::INTERNAL_SERVER_ERROR,
+            };
+            return Ok(HttpResponse::build(status).body(msg));
         }
     };
 
