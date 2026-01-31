@@ -34,7 +34,7 @@ let settings = LoggerSettings {
     log_file_path: "/path/to/my/file.log".to_string(),
     network_logs: true,
     network_log_lvl: "warn".to_string(),
-    network_endpoint_url: NetworkEndpointUrl::Single(SingleNet { url: "http://127.0.0.1:8090/".to_string() }),
+    network_endpoint_url: NetworkEndpointUrl::Single(SingleNet { url: "http://127.0.0.1:8090/".to_string() }), // Using single endpoint
     network_format: NetworkFormat::PlainText,
     debug_extra: true,
     async_logging: false,
@@ -59,7 +59,7 @@ let settings = LoggerSettings {
     log_file_path: "".to_string(), // value doesn't matter
     network_logs: true,
     network_log_lvl: "trace".to_string(),
-    network_endpoint_url: NetworkEndpointUrl::MultipleNet(endpoints),
+    network_endpoint_url: NetworkEndpointUrl::MultipleNet(endpoints), // Using multiple endpoints
     network_format: NetworkFormat::JsonText { field: "text".into() },
     debug_extra: true,
     async_logging: true, // if network_logs is true, async_logging must also be true 
