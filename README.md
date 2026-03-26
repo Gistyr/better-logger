@@ -36,6 +36,8 @@ let settings = LoggerSettings {
     network_log_lvl: "warn".to_string(),
     network_endpoint_url: NetworkEndpointUrl::Single(SingleNet { url: "http://127.0.0.1:8090/".to_string() }), // Using single endpoint
     network_format: NetworkFormat::PlainText,
+    use_bearer_auth: true, // Using bearer auth
+    bearer_auth_key: "secretkey".to_string(),
     debug_extra: true,
     async_logging: false,
 };
@@ -61,6 +63,8 @@ let settings = LoggerSettings {
     network_log_lvl: "trace".to_string(),
     network_endpoint_url: NetworkEndpointUrl::MultipleNet(endpoints), // Using multiple endpoints
     network_format: NetworkFormat::JsonText { field: "text".into() },
+    use_bearer_auth: false, // Not using bearer auth
+    bearer_auth_key: "".to_string(),
     debug_extra: true,
     async_logging: true, // if network_logs is true, async_logging must also be true 
 };
@@ -106,6 +110,8 @@ fn my_function() {
 | `network_log_lvl`        | Minimum level to send            |
 | `network_format`         | Network message format           |
 | `network_endpoint_url`   | URL(s) to send log messages to   |
+| `use_bearer_auth`        | Enable Bearer auth for HTTP logs |
+| `bearer_auth_key`        | Bearer token used for HTTP logs  |
 | `debug_extra`            | Show `debugx!` logs              |
 | `async_logging`          | Enable async logging             |
 # ℹ️ INFORMATION
@@ -128,6 +134,9 @@ fn my_function() {
     - It spawns a new async task on the current ([tokio](https://crates.io/crates/tokio)) runtime for each message
 - Network logging uses a **“fire and forget”** model
      - If your HTTP endpoint is down, [better-logger's](https://crates.io/crates/better-logger) will continue to run without issue
+- Optional Bearer auth can be added to every network log request
+    - Set `use_bearer_auth = true` and provide a non-empty `bearer_auth_key`
+    - Initialization fails if `use_bearer_auth = true` and `bearer_auth_key` is empty
 - Why is `synchronous` `network logging` NOT allowed `in WASM`? Browsers don’t allow blocking network I/O on the main thread
 - Why is `file logging` NOT allowed `in WASM`? Browsers can't talk to your file system
 - All macros use `format!()` under the hood, any string-like type is accepted

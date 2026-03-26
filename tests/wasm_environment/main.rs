@@ -31,6 +31,8 @@ fn main() {
         network_log_lvl: "trace".to_string(),
         network_endpoint_url: NetworkEndpointUrl::Single(SingleNet { url: "http://127.0.0.1:8070/".to_string() }),
         network_format: NetworkFormat::PlainText, 
+        use_bearer_auth: false,
+        bearer_auth_key: "".to_string(),
         debug_extra: true,
         async_logging: true,
     };

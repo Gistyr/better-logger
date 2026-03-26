@@ -60,8 +60,13 @@ pub(super) fn send_log_line(level: &str, target: &str, message: &str) -> Result<
 
             match &running_settings.network_format {
                 NetworkFormat::PlainText => {
-                    gloo_net::http::Request::post(&url)
-                        .header("Content-Type", "text/plain; charset=utf-8")
+                    let mut request = gloo_net::http::Request::post(&url)
+                        .header("Content-Type", "text/plain; charset=utf-8");
+                    if running_settings.use_bearer_auth == true {
+                        request = request.header("Authorization", &format!("Bearer {}", running_settings.bearer_auth_key));
+                    }
+
+                    request
                         .body(line)
                         .map_err(|error| format!("build request (PlainText) failed: {:?}", error))?
                         .send()
@@ -71,8 +76,13 @@ pub(super) fn send_log_line(level: &str, target: &str, message: &str) -> Result<
                 }
                 NetworkFormat::JsonText { field } => {
                     let payload = json!({ field: line }).to_string();
-                    gloo_net::http::Request::post(&url)
-                        .header("Content-Type", "application/json; charset=utf-8")
+                    let mut request = gloo_net::http::Request::post(&url)
+                        .header("Content-Type", "application/json; charset=utf-8");
+                    if running_settings.use_bearer_auth == true {
+                        request = request.header("Authorization", &format!("Bearer {}", running_settings.bearer_auth_key));
+                    }
+
+                    request
                         .body(payload)
                         .map_err(|error| format!("build request (JsonText) failed: {:?}", error))?
                         .send()

@@ -53,6 +53,10 @@ pub fn init(settings: LoggerSettings) -> Result<String, String> {
 
 #[cfg(any(feature = "native", feature = "wasm"))]
 fn init_private(settings: LoggerSettings) -> Result<String, String> {
+    if settings.use_bearer_auth == true && settings.bearer_auth_key.trim().is_empty() {
+        return Err(format!(r#"better-logger: "bearer_auth_key" must be set when "use_bearer_auth" is true"#));
+    }
+
     #[cfg(feature = "native")]
     if settings.async_logging == true {
         if settings.wasm_logging == false {
@@ -105,6 +109,8 @@ fn init_private(settings: LoggerSettings) -> Result<String, String> {
         network_log_lvl: settings.network_log_lvl,
         network_endpoint_url: settings.network_endpoint_url,
         network_format: settings.network_format,
+        use_bearer_auth: settings.use_bearer_auth,
+        bearer_auth_key: settings.bearer_auth_key,
         debug_extra: settings.debug_extra,
         async_logging: settings.async_logging,
     };

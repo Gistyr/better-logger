@@ -44,6 +44,8 @@ pub struct LoggerSettings {
     pub network_log_lvl: String,
     pub network_endpoint_url: NetworkEndpointUrl,
     pub network_format: NetworkFormat,
+    pub use_bearer_auth: bool,
+    pub bearer_auth_key: String,
     pub debug_extra: bool,
     pub async_logging: bool,
 }
@@ -74,6 +76,8 @@ pub(crate) struct RunningSettings {
     pub(crate) network_log_lvl: String,
     pub(crate) network_endpoint_url: NetworkEndpointUrl,
     pub(crate) network_format: NetworkFormat,
+    pub(crate) use_bearer_auth: bool,
+    pub(crate) bearer_auth_key: String,
     pub(crate) debug_extra: bool,
     pub(crate) async_logging: bool,
 }

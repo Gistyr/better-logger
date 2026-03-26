@@ -49,7 +49,10 @@ pub(super) fn send_log_line(level: &str, target: &str, message: &str) -> Result<
     let header: String = format!("[{} {} {}]", timestamp, header_level, target);
     let line: String   = format!("{} {}", header, message);
 
-    let request = CLIENT.post(url);
+    let mut request = CLIENT.post(url);
+    if running_settings.use_bearer_auth == true {
+        request = request.header("Authorization", &format!("Bearer {}", running_settings.bearer_auth_key));
+    }
 
     match &running_settings.network_format {
         NetworkFormat::PlainText => {

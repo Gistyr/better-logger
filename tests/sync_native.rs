@@ -31,6 +31,8 @@ fn test_six() {
         network_log_lvl: "trace".to_string(),
         network_endpoint_url: NetworkEndpointUrl::Single(SingleNet { url: "http://127.0.0.1:8090/".to_string() }),
         network_format: NetworkFormat::PlainText, 
+        use_bearer_auth: false,
+        bearer_auth_key: "".to_string(),
         debug_extra: true,
         async_logging: false,
     };
@@ -67,6 +69,8 @@ fn test_seven() {
         network_log_lvl: "trace".to_string(),
         network_endpoint_url: NetworkEndpointUrl::Single(SingleNet { url: "http://127.0.0.1:8090/".to_string() }),
         network_format: NetworkFormat::PlainText, 
+        use_bearer_auth: false,
+        bearer_auth_key: "".to_string(),
         debug_extra: true,
         async_logging: false,
     };
@@ -103,6 +107,8 @@ fn test_eight() {
         network_log_lvl: "trace".to_string(),
         network_endpoint_url: NetworkEndpointUrl::Single(SingleNet { url: "http://127.0.0.1:8090/".to_string() }),
         network_format: NetworkFormat::PlainText, 
+        use_bearer_auth: false,
+        bearer_auth_key: "".to_string(),
         debug_extra: false,
         async_logging: false,
     };
@@ -139,6 +145,8 @@ fn test_nine() {
         network_log_lvl: "trace".to_string(),
         network_endpoint_url: NetworkEndpointUrl::Single(SingleNet { url: "http://127.0.0.1:8090/".to_string() }),
         network_format: NetworkFormat::PlainText, 
+        use_bearer_auth: false,
+        bearer_auth_key: "".to_string(),
         debug_extra: false,
         async_logging: false,
     };
@@ -175,6 +183,8 @@ fn test_ten() {
         network_log_lvl: "trace".to_string(),
         network_endpoint_url: NetworkEndpointUrl::Single(SingleNet { url: "http://127.0.0.1:8090/".to_string() }),
         network_format: NetworkFormat::PlainText, 
+        use_bearer_auth: false,
+        bearer_auth_key: "".to_string(),
         debug_extra: true,
         async_logging: false,
     };
