@@ -11,8 +11,8 @@
 ## 😺 ONE: Declare Feature
 ```rust
 /* no default feature enabled (enabling both at once won't compile) */
-better-logger = { version = "2.1.6", features = ["native"] }
-better-logger = { version = "2.1.6", features = ["wasm"] }
+better-logger = { version = "2.3.3", features = ["native"] }
+better-logger = { version = "2.3.3", features = ["wasm"] }
 ```
 ## 💻 TWO: Settings
 ```rust
@@ -191,10 +191,10 @@ If you have multiple endpoints, use `MultipleNet`.
 ## See the working example: https://github.com/Lozlof/easy-log-forwarding
 ## 😺 ONE: Declare Feature
 ```rust
-better-logger = { version = "2.1.6", features = ["relay"] }
+better-logger = { version = "2.3.3", features = ["relay"] }
 /* if you want the relay server to also send logs, declare native as well */
 /* "relay" cannot run in a WASM environment */
-better-logger = { version = "2.1.6", features = ["relay", "native"] }
+better-logger = { version = "2.3.3", features = ["relay", "native"] }
 ```
 ## 💻 TWO: Settings
 ```rust
