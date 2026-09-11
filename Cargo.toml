@@ -1,6 +1,6 @@
 [package]
 name = "better-logger"
-version = "2.3.3"
+version = "2.3.4"
 edition = "2024"
 rust-version = "1.85.1"
 authors = ["Gistyr LLC <contact@gistyr.dev>"]
@@ -15,26 +15,27 @@ categories = ["development-tools", "asynchronous"]
 exclude = ["tests/logs/*.log"]
 
 [dependencies]
-log = { version = "0.4.33", optional = true }
+log = { version = "0.4.34", optional = true }
 env_logger = { version = "0.11.11", default-features = false, features = ["auto-color", "humantime"], optional = true }
 tokio = { version = "1.53.1", default-features = false, features = ["rt", "macros", "time"], optional = true }
 chrono = { version = "0.4.45", default-features = false, features = ["clock", "std"], optional = true }
 wasm-logger = { version = "0.2.0", optional = true }
-web-sys = { version = "0.3.103", optional = true }
-wasm-bindgen-futures = { version = "0.4.68", optional = true }
-ureq = { version = "3.3.0", default-features = false, features = ["json", "rustls"], optional = true }
+web-sys = { version = "0.3.104", optional = true }
+wasm-bindgen-futures = { version = "0.4.77", optional = true }
+ureq = { version = "3.4.1", default-features = false, features = ["json", "rustls"], optional = true }
 yew = { version = "0.23.0", features = ["csr"], optional = true }
 tiny_http = { version = "0.12.0", optional = true }
 gloo-net = { version = "0.7.0", features = ["json"], optional = true }
+gloo-timers = { version = "0.4.0", features = ["futures"], optional = true }
 js-sys = { version = "0.3.103", optional = true }
 serde_json = { version = "1.0.151", optional = true }
-actix-web = { version = "4.14.0", optional = true }
-actix-cors = { version = "0.7.1", optional = true }
+actix-web = { version = "4.15.0", optional = true }
+actix-cors = { version = "0.7.2", optional = true }
 awc = { version = "3.8.2", optional = true, default-features = false, features = ["rustls"] }  
 
 [features]
 native = ["log", "env_logger", "tokio", "chrono", "ureq", "serde_json"]
-wasm = ["log", "wasm-logger", "web-sys", "wasm-bindgen-futures", "gloo-net", "js-sys", "serde_json"]
+wasm = ["log", "wasm-logger", "web-sys", "wasm-bindgen-futures", "gloo-net", "gloo-timers", "js-sys", "serde_json"]
 relay  = ["actix-web", "actix-cors", "awc", "serde_json"] 
 testing-wasm = ["yew", "wasm"]
 testing-http = ["tiny_http", "native"]
