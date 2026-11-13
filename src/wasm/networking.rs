@@ -1,7 +1,9 @@
 // better-logger/src/wasm/networking.rs
 
 #[cfg(feature = "wasm")]
-use crate::interface::settings::{RUNNING_SETTINGS, NetworkFormat, NetworkEndpointUrl};
+use crate::interface::settings::{
+    RUNNING_SETTINGS, NetworkFormat, NetworkEndpointUrl, RequestSigner, SignableRequest, validated_signer_headers,
+};
 #[cfg(feature = "wasm")]
 use serde_json::json;
 
@@ -29,11 +31,20 @@ fn retry_jitter_ms() -> u32 {
 }
 
 #[cfg(feature = "wasm")]
-async fn send_once(url: &str, content_type: &str, bearer_auth_key: Option<&str>, body: &str, format_name: &str) -> Result<(), SendFailure> {
+async fn send_once(url: &str, content_type: &str, bearer_auth_key: Option<&str>, request_signer: Option<RequestSigner>, body: &str, format_name: &str) -> Result<(), SendFailure> {
+    let signable_request = SignableRequest { url, content_type, body };
+    let signed_headers = match validated_signer_headers(request_signer, &signable_request, bearer_auth_key.is_some()) {
+        Ok(headers) => headers,
+        Err(error) => return Err(SendFailure::Permanent(error)),
+    };
+
     let mut request = gloo_net::http::Request::post(url)
         .header("Content-Type", content_type);
     if let Some(key) = bearer_auth_key {
         request = request.header("Authorization", &format!("Bearer {}", key));
+    }
+    for (header_name, header_value) in &signed_headers {
+        request = request.header(header_name.as_str(), header_value.as_str());
     }
 
     let request = match request.body(body.to_owned()) {
@@ -59,8 +70,8 @@ async fn send_once(url: &str, content_type: &str, bearer_auth_key: Option<&str>,
 }
 
 #[cfg(feature = "wasm")]
-async fn send_with_retry(url: &str, content_type: &str, bearer_auth_key: Option<&str>, body: &str, format_name: &str) -> Result<(), String> {
-    let mut last_failure = match send_once(url, content_type, bearer_auth_key, body, format_name).await {
+async fn send_with_retry(url: &str, content_type: &str, bearer_auth_key: Option<&str>, request_signer: Option<RequestSigner>, body: &str, format_name: &str) -> Result<(), String> {
+    let mut last_failure = match send_once(url, content_type, bearer_auth_key, request_signer, body, format_name).await {
         Ok(()) => return Ok(()),
         Err(SendFailure::Permanent(failure)) => return Err(failure),
         Err(SendFailure::Retryable(failure)) => failure,
@@ -68,7 +79,7 @@ async fn send_with_retry(url: &str, content_type: &str, bearer_auth_key: Option<
 
     for delay_ms in NETWORK_RETRY_DELAYS_MS {
         gloo_timers::future::TimeoutFuture::new(delay_ms.saturating_add(retry_jitter_ms())).await;
-        last_failure = match send_once(url, content_type, bearer_auth_key, body, format_name).await {
+        last_failure = match send_once(url, content_type, bearer_auth_key, request_signer, body, format_name).await {
             Ok(()) => return Ok(()),
             Err(SendFailure::Permanent(failure)) => return Err(failure),
             Err(SendFailure::Retryable(failure)) => failure,
@@ -137,13 +148,15 @@ pub(super) fn send_log_line(level: &str, target: &str, message: &str) -> Result<
                 None
             };
 
+            let request_signer: Option<RequestSigner> = running_settings.request_signer;
+
             match &running_settings.network_format {
                 NetworkFormat::PlainText => {
-                    send_with_retry(&url, "text/plain; charset=utf-8", bearer_auth_key, &line, "PlainText").await
+                    send_with_retry(&url, "text/plain; charset=utf-8", bearer_auth_key, request_signer, &line, "PlainText").await
                 }
                 NetworkFormat::JsonText { field } => {
                     let payload = json!({ field: line }).to_string();
-                    send_with_retry(&url, "application/json; charset=utf-8", bearer_auth_key, &payload, "JsonText").await
+                    send_with_retry(&url, "application/json; charset=utf-8", bearer_auth_key, request_signer, &payload, "JsonText").await
                 }
             }
         }.await {

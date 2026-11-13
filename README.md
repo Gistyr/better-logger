@@ -5,14 +5,16 @@
 ✔️ **Terminal Logging**               
 ✔️ **File Logging**              
 ✔️ **Network Logging**           
-✔️ **Relay Server**               
+✔️ **Auth and Request Signing**      
+✔️ **Relay Server**
+✔️ **Production Ready**              
 # HOW TO USE
 #### If you want to use the `relay` feature, scroll down to **RELAY SERVER** 
 ## 😺 ONE: Declare Feature
 ```rust
 /* no default feature enabled (enabling both at once won't compile) */
-better-logger = { version = "2.3.6", features = ["native"] }
-better-logger = { version = "2.3.6", features = ["wasm"] }
+better-logger = { version = "3.0.1", features = ["native"] }
+better-logger = { version = "3.0.1", features = ["wasm"] }
 ```
 ## 💻 TWO: Settings
 ```rust
@@ -38,6 +40,7 @@ let settings = LoggerSettings {
     network_format: NetworkFormat::PlainText,
     use_bearer_auth: true, // Using bearer auth
     bearer_auth_key: "secretkey".to_string(),
+    request_signer: Some(RequestSigner(sign_log)), // See Request Signing for details
     debug_extra: true,
     async_logging: false,
 };
@@ -65,6 +68,7 @@ let settings = LoggerSettings {
     network_format: NetworkFormat::JsonText { field: "text".into() },
     use_bearer_auth: false, // Not using bearer auth
     bearer_auth_key: "".to_string(),
+    request_signer: None, // No request signing, see Request Signing for details
     debug_extra: true,
     async_logging: true, // if network_logs is true, async_logging must also be true 
 };
@@ -98,22 +102,23 @@ fn my_function() {
 }
 ```
 `trace!` ➡️ (`debug!`, `debugx!`) ➡️ `info!` ➡️ `warn!` ➡️ `error!`
-| SETTING                  | DESCRIPTION                      |   
-|--------------------------|----------------------------------|
-| `terminal_logs`          | Log to terminal                  |
-| `terminal_log_lvl`       | Minimum level to display         |
-| `wasm_logging`           | Log to dev tools console         | 
-| `file_logs`              | Log to file                      |
-| `file_log_lvl`           | Minimum level to write           |
-| `log_file_path`          | Path to log file                 |
-| `network_logs`           | Log to an HTTP endpoint          |
-| `network_log_lvl`        | Minimum level to send            |
-| `network_format`         | Network message format           |
-| `network_endpoint_url`   | URL(s) to send log messages to   |
-| `use_bearer_auth`        | Enable Bearer auth for HTTP logs |
-| `bearer_auth_key`        | Bearer token used for HTTP logs  |
-| `debug_extra`            | Show `debugx!` logs              |
-| `async_logging`          | Enable async logging             |
+| SETTING                  | DESCRIPTION                        |   
+|--------------------------|------------------------------------|
+| `terminal_logs`          | Log to terminal                    |
+| `terminal_log_lvl`       | Minimum level to display           |
+| `wasm_logging`           | Log to dev tools console           | 
+| `file_logs`              | Log to file                        |
+| `file_log_lvl`           | Minimum level to write             |
+| `log_file_path`          | Path to log file                   |
+| `network_logs`           | Log to an HTTP endpoint            |
+| `network_log_lvl`        | Minimum level to send              |
+| `network_format`         | Network message format             |
+| `network_endpoint_url`   | URL(s) to send log messages to     |
+| `use_bearer_auth`        | Enable Bearer auth for HTTP logs   |
+| `bearer_auth_key`        | Bearer token used for HTTP logs    |
+| `request_signer`         | Optional per-request header signer |
+| `debug_extra`            | Show `debugx!` logs                |
+| `async_logging`          | Enable async logging               |
 # ℹ️ INFORMATION
 - NATIVE console logging uses [env_logger](https://crates.io/crates/env_logger)
 - WASM console logging uses [wasm-logger](https://crates.io/crates/wasm-logger)
@@ -137,6 +142,7 @@ fn my_function() {
 - Optional Bearer auth can be added to every network log request
     - Set `use_bearer_auth = true` and provide a non-empty `bearer_auth_key`
     - Initialization fails if `use_bearer_auth = true` and `bearer_auth_key` is empty
+- Optional per-request headers (for example signatures) can be added with `request_signer`, see **Request signing**
 - Why is `synchronous` `network logging` NOT allowed `in WASM`? Browsers don’t allow blocking network I/O on the main thread
 - Why is `file logging` NOT allowed `in WASM`? Browsers can't talk to your file system
 - All macros use `format!()` under the hood, any string-like type is accepted
@@ -185,16 +191,42 @@ pub struct MultipleNet {
 ```     
 If you want all your log levels to hit one endpoint, use `SingleNet`.         
 If you have multiple endpoints, use `MultipleNet`.                     
+## Request Signing
+`request_signer` lets your application add its own headers to every network log request, for example a timestamp and an HMAC signature that your endpoint verifies.
+better-logger only calls your function, it contains no signing algorithm or keys.
+```rust
+use better_logger::{RequestSigner, SignableRequest};
+
+fn sign_log(request: &SignableRequest<'_>) -> Result<Vec<(String, String)>, String> {
+    // request.url, request.content_type and request.body (the exact bytes being sent)
+    let signature: String = my_hmac(request.body)?;
+    return Ok(vec![("X-Log-Signature".to_string(), signature)]);
+}
+
+let settings = LoggerSettings {
+    /* ... */
+    request_signer: Some(RequestSigner(sign_log)), // or None to disable
+    /* ... */
+};
+```
+- `RequestSigner` wraps a plain `fn`, not a closure. Keep any key your signer needs in your own `static` / `OnceLock`
+- It is called **once per HTTP attempt**, right before sending. WASM retries call it again, so time based signatures stay fresh
+- `body` is exactly what is sent: the formatted line for `PlainText`, the serialized payload for `JsonText`
+- Your headers are added after `Content-Type` and the optional `Authorization: Bearer` header
+- If your signer returns `Err`, that log message is **not sent** (it is never sent unsigned), and the error is printed like any other network failure
+- A signer may not set `Content-Type`, and may not set `Authorization` when `use_bearer_auth` is `true` (checked case-insensitively). Empty header names are rejected. Any of these drops the message the same way as an `Err`
+- In a browser, custom headers trigger a CORS preflight. Your endpoint must list them in `Access-Control-Allow-Headers`
+- The `relay` server does not forward custom headers, so request signing only works when sending directly to your endpoint
 # RELAY SERVER      
 - When using WASM in the browser, CORS will block requests to external domains such as `hooks.slack.com` or `discord.com`.           
 - To avoid this, your web client should send logs to a logging server on the same domain, which can then forward those logs to external services like Slack or Discord.
 ## See the working example: https://github.com/Lozlof/easy-log-forwarding
 ## 😺 ONE: Declare Feature
 ```rust
-better-logger = { version = "2.3.6", features = ["relay"] }
+better-logger = { version = "3.0.1", features = ["relay"] }
 /* if you want the relay server to also send logs, declare native as well */
 /* "relay" cannot run in a WASM environment */
-better-logger = { version = "2.3.6", features = ["relay", "native"] }
+better-logger = { version = "3.0.1", features = ["relay", "native"] }
 ```
 ## 💻 TWO: Settings
 ```rust

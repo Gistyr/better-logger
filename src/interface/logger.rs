@@ -111,6 +111,7 @@ fn init_private(settings: LoggerSettings) -> Result<String, String> {
         network_format: settings.network_format,
         use_bearer_auth: settings.use_bearer_auth,
         bearer_auth_key: settings.bearer_auth_key,
+        request_signer: settings.request_signer,
         debug_extra: settings.debug_extra,
         async_logging: settings.async_logging,
     };

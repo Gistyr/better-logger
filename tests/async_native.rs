@@ -17,6 +17,10 @@ use better_logger::NetworkEndpointUrl;
 use better_logger::SingleNet;
 #[cfg(feature = "native")]
 use better_logger::MultipleNet;
+#[cfg(feature = "native")]
+use better_logger::RequestSigner;
+#[cfg(feature = "native")]
+use better_logger::SignableRequest;
 
 #[cfg(feature = "native")]
 #[tokio::test]
@@ -43,6 +47,7 @@ async fn test_one() {
         network_format: NetworkFormat::JsonText { field: "text".into() },
         use_bearer_auth: false,
         bearer_auth_key: "".to_string(),
+        request_signer: None,
         debug_extra: true,
         async_logging: true,
     };
@@ -83,6 +88,7 @@ async fn test_two() {
         network_format: NetworkFormat::PlainText, 
         use_bearer_auth: false,
         bearer_auth_key: "".to_string(),
+        request_signer: None,
         debug_extra: true,
         async_logging: true,
     };
@@ -123,6 +129,7 @@ async fn test_three() {
         network_format: NetworkFormat::PlainText, 
         use_bearer_auth: false,
         bearer_auth_key: "".to_string(),
+        request_signer: None,
         debug_extra: false,
         async_logging: true,
     };
@@ -163,6 +170,7 @@ async fn test_four() {
         network_format: NetworkFormat::PlainText, 
         use_bearer_auth: false,
         bearer_auth_key: "".to_string(),
+        request_signer: None,
         debug_extra: false,
         async_logging: true,
     };
@@ -203,6 +211,7 @@ async fn test_five() {
         network_format: NetworkFormat::PlainText, 
         use_bearer_auth: false,
         bearer_auth_key: "".to_string(),
+        request_signer: None,
         debug_extra: true,
         async_logging: true,
     };
@@ -226,4 +235,81 @@ async fn test_five() {
     error!(r#"{}: async Test Five"#, error);
 
     tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+}
+#[cfg(feature = "native")]
+fn test_signer(signable_request: &SignableRequest<'_>) -> Result<Vec<(String, String)>, String> {
+    return Ok(vec![
+        ("X-Better-Logger-Signed".to_string(), "true".to_string()),
+        ("X-Better-Logger-Body-Length".to_string(), signable_request.body.len().to_string()),
+    ]);
+}
+
+#[cfg(feature = "native")]
+fn failing_signer(_signable_request: &SignableRequest<'_>) -> Result<Vec<(String, String)>, String> {
+    return Err("test signer refused to sign".to_string());
+}
+
+#[cfg(feature = "native")]
+#[tokio::test]
+async fn test_signer_async() {
+    let log_settings = LoggerSettings {
+        terminal_logs: true,
+        terminal_log_lvl: "trace".to_string(),
+        wasm_logging: false,
+        file_logs: false,
+        file_log_lvl: "trace".to_string(),
+        log_file_path: "tests/logs/test_signer_async.log".to_string(),
+        network_logs: true,
+        network_log_lvl: "trace".to_string(),
+        network_endpoint_url: NetworkEndpointUrl::Single(SingleNet { url: "http://127.0.0.1:8090/".to_string() }),
+        network_format: NetworkFormat::JsonText { field: "text".to_string() },
+        use_bearer_auth: true,
+        bearer_auth_key: "testkey".to_string(),
+        request_signer: Some(RequestSigner(test_signer)),
+        debug_extra: true,
+        async_logging: true,
+    };
+
+    if let Err(error) = init(log_settings) {
+        eprintln!("{:?}", error);
+        std::process::exit(1);
+    }
+
+    info!("Test Signer Async: every network line carries X-Better-Logger-* headers");
+    warn!("WARN: async Test Signer");
+    error!("ERROR: async Test Signer");
+
+    tokio::time::sleep(std::time::Duration::from_millis(500)).await;
+}
+
+#[cfg(feature = "native")]
+#[tokio::test]
+async fn test_signer_error_async() {
+    let log_settings = LoggerSettings {
+        terminal_logs: true,
+        terminal_log_lvl: "trace".to_string(),
+        wasm_logging: false,
+        file_logs: false,
+        file_log_lvl: "trace".to_string(),
+        log_file_path: "tests/logs/test_signer_error_async.log".to_string(),
+        network_logs: true,
+        network_log_lvl: "trace".to_string(),
+        network_endpoint_url: NetworkEndpointUrl::Single(SingleNet { url: "http://127.0.0.1:8090/".to_string() }),
+        network_format: NetworkFormat::PlainText,
+        use_bearer_auth: false,
+        bearer_auth_key: "".to_string(),
+        request_signer: Some(RequestSigner(failing_signer)),
+        debug_extra: true,
+        async_logging: true,
+    };
+
+    if let Err(error) = init(log_settings) {
+        eprintln!("{:?}", error);
+        std::process::exit(1);
+    }
+
+    info!("Test Signer Error Async: nothing should reach the http server");
+    error!("ERROR: async Test Signer Error");
+
+    tokio::time::sleep(std::time::Duration::from_millis(500)).await;
 }

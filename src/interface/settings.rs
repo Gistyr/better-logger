@@ -32,6 +32,76 @@ pub enum NetworkEndpointUrl {
 }
 
 #[cfg(any(feature = "native", feature = "wasm"))]
+#[derive(Debug)]
+#[non_exhaustive]
+pub struct SignableRequest<'a> {
+    pub url: &'a str,
+    pub content_type: &'a str,
+    pub body: &'a str,
+}
+
+#[cfg(any(feature = "native", feature = "wasm"))]
+#[derive(Clone, Copy)]
+pub struct RequestSigner(pub fn(&SignableRequest<'_>) -> Result<Vec<(String, String)>, String>);
+
+#[cfg(any(feature = "native", feature = "wasm"))]
+impl std::fmt::Debug for RequestSigner {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        return formatter.write_str("RequestSigner(..)");
+    }
+}
+
+#[cfg(any(feature = "native", feature = "wasm"))]
+impl PartialEq for RequestSigner {
+    fn eq(&self, other: &Self) -> bool {
+        return std::ptr::fn_addr_eq(self.0, other.0);
+    }
+}
+
+#[cfg(any(feature = "native", feature = "wasm"))]
+pub(crate) fn validated_signer_headers(
+    request_signer: Option<RequestSigner>,
+    signable_request: &SignableRequest<'_>,
+    use_bearer_auth: bool,
+) -> Result<Vec<(String, String)>, String> {
+    let signer = match request_signer {
+        Some(signer) => signer,
+        None => return Ok(Vec::new()),
+    };
+
+    let signed_headers = match (signer.0)(signable_request) {
+        Ok(headers) => headers,
+        Err(error) => return Err(format!(r#"better-logger: "request_signer" failed, the log was not sent: {}"#, error)),
+    };
+
+    for (header_name, _header_value) in &signed_headers {
+        let normalized_name = header_name.trim().to_ascii_lowercase();
+        if normalized_name.is_empty() {
+            return Err(format!(r#"better-logger: "request_signer" returned an empty header name, the log was not sent"#));
+        }
+        if normalized_name == "content-type" {
+            return Err(format!(r#"better-logger: "request_signer" may not set "Content-Type", the log was not sent"#));
+        }
+        if use_bearer_auth == true && normalized_name == "authorization" {
+            return Err(format!(r#"better-logger: "request_signer" may not set "Authorization" when "use_bearer_auth" is true, the log was not sent"#));
+        }
+    }
+
+    return Ok(signed_headers);
+}
+
+///0
+///1
+///2
+///3
+///4
+///5
+///6
+///7
+///8
+///9
+
+#[cfg(any(feature = "native", feature = "wasm"))]
 #[derive(Clone, Debug, PartialEq)]
 pub struct LoggerSettings {
     pub terminal_logs: bool,
@@ -46,6 +116,7 @@ pub struct LoggerSettings {
     pub network_format: NetworkFormat,
     pub use_bearer_auth: bool,
     pub bearer_auth_key: String,
+    pub request_signer: Option<RequestSigner>,
     pub debug_extra: bool,
     pub async_logging: bool,
 }
@@ -78,6 +149,7 @@ pub(crate) struct RunningSettings {
     pub(crate) network_format: NetworkFormat,
     pub(crate) use_bearer_auth: bool,
     pub(crate) bearer_auth_key: String,
+    pub(crate) request_signer: Option<RequestSigner>,
     pub(crate) debug_extra: bool,
     pub(crate) async_logging: bool,
 }

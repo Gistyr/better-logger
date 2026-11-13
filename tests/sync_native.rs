@@ -16,6 +16,10 @@ use better_logger::NetworkFormat;
 use better_logger::NetworkEndpointUrl;
 #[cfg(feature = "native")]
 use better_logger::SingleNet;
+#[cfg(feature = "native")]
+use better_logger::RequestSigner;
+#[cfg(feature = "native")]
+use better_logger::SignableRequest;
 
 #[cfg(feature = "native")]
 #[test]
@@ -33,6 +37,7 @@ fn test_six() {
         network_format: NetworkFormat::PlainText, 
         use_bearer_auth: false,
         bearer_auth_key: "".to_string(),
+        request_signer: None,
         debug_extra: true,
         async_logging: false,
     };
@@ -71,6 +76,7 @@ fn test_seven() {
         network_format: NetworkFormat::PlainText, 
         use_bearer_auth: false,
         bearer_auth_key: "".to_string(),
+        request_signer: None,
         debug_extra: true,
         async_logging: false,
     };
@@ -109,6 +115,7 @@ fn test_eight() {
         network_format: NetworkFormat::PlainText, 
         use_bearer_auth: false,
         bearer_auth_key: "".to_string(),
+        request_signer: None,
         debug_extra: false,
         async_logging: false,
     };
@@ -147,6 +154,7 @@ fn test_nine() {
         network_format: NetworkFormat::PlainText, 
         use_bearer_auth: false,
         bearer_auth_key: "".to_string(),
+        request_signer: None,
         debug_extra: false,
         async_logging: false,
     };
@@ -185,6 +193,7 @@ fn test_ten() {
         network_format: NetworkFormat::PlainText, 
         use_bearer_auth: false,
         bearer_auth_key: "".to_string(),
+        request_signer: None,
         debug_extra: true,
         async_logging: false,
     };
@@ -206,4 +215,77 @@ fn test_ten() {
     info!("INFO: sync Test Ten");
     warn!("WARN: sync Test Ten");
     error!(r#"{}: sync Test Ten"#, error);
+}
+#[cfg(feature = "native")]
+fn test_signer(signable_request: &SignableRequest<'_>) -> Result<Vec<(String, String)>, String> {
+    return Ok(vec![
+        ("X-Better-Logger-Signed".to_string(), "true".to_string()),
+        ("X-Better-Logger-Body-Length".to_string(), signable_request.body.len().to_string()),
+    ]);
+}
+
+#[cfg(feature = "native")]
+fn failing_signer(_signable_request: &SignableRequest<'_>) -> Result<Vec<(String, String)>, String> {
+    return Err("test signer refused to sign".to_string());
+}
+
+#[cfg(feature = "native")]
+#[test]
+fn test_signer_sync() {
+    let log_settings = LoggerSettings {
+        terminal_logs: true,
+        terminal_log_lvl: "trace".to_string(),
+        wasm_logging: false,
+        file_logs: false,
+        file_log_lvl: "trace".to_string(),
+        log_file_path: "tests/logs/test_signer_sync.log".to_string(),
+        network_logs: true,
+        network_log_lvl: "trace".to_string(),
+        network_endpoint_url: NetworkEndpointUrl::Single(SingleNet { url: "http://127.0.0.1:8090/".to_string() }),
+        network_format: NetworkFormat::PlainText,
+        use_bearer_auth: true,
+        bearer_auth_key: "testkey".to_string(),
+        request_signer: Some(RequestSigner(test_signer)),
+        debug_extra: true,
+        async_logging: false,
+    };
+
+    if let Err(error) = init(log_settings) {
+        eprintln!("{:?}", error);
+        std::process::exit(1);
+    }
+
+    logger::info!("Test Signer Sync: every network line carries X-Better-Logger-* headers");
+    logger::warn!("WARN: sync Test Signer");
+    logger::error!("ERROR: sync Test Signer");
+}
+
+#[cfg(feature = "native")]
+#[test]
+fn test_signer_error_sync() {
+    let log_settings = LoggerSettings {
+        terminal_logs: true,
+        terminal_log_lvl: "trace".to_string(),
+        wasm_logging: false,
+        file_logs: false,
+        file_log_lvl: "trace".to_string(),
+        log_file_path: "tests/logs/test_signer_error_sync.log".to_string(),
+        network_logs: true,
+        network_log_lvl: "trace".to_string(),
+        network_endpoint_url: NetworkEndpointUrl::Single(SingleNet { url: "http://127.0.0.1:8090/".to_string() }),
+        network_format: NetworkFormat::PlainText,
+        use_bearer_auth: false,
+        bearer_auth_key: "".to_string(),
+        request_signer: Some(RequestSigner(failing_signer)),
+        debug_extra: true,
+        async_logging: false,
+    };
+
+    if let Err(error) = init(log_settings) {
+        eprintln!("{:?}", error);
+        std::process::exit(1);
+    }
+
+    logger::info!("Test Signer Error Sync: nothing should reach the http server");
+    logger::error!("ERROR: sync Test Signer Error");
 }

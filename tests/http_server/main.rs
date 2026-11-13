@@ -23,8 +23,15 @@ fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     loop {
         let mut request = server.recv()?;
 
+        let requested_headers: String = request
+            .headers()
+            .iter()
+            .find(|header| header.field.equiv("Access-Control-Request-Headers"))
+            .map(|header| header.value.as_str().to_string())
+            .unwrap_or_else(|| "Content-Type, Authorization".to_string());
+
         if request.method() == &tiny_http::Method::Options {
-            request.respond(with_cors(tiny_http::Response::empty(204))?)?;
+            request.respond(with_cors(tiny_http::Response::empty(204), &requested_headers)?)?;
             continue;
         }
 
@@ -33,21 +40,28 @@ fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             continue;
         }
 
+        for header in request.headers() {
+            let header_name = header.field.as_str().as_str().to_ascii_lowercase();
+            if header_name.starts_with("x-") || header_name == "authorization" {
+                println!("  {}: {}", header.field.as_str(), header.value.as_str());
+            }
+        }
+
         let mut body = String::new();
         request.as_reader().read_to_string(&mut body)?;
         println!("{body}");
 
-        request.respond(with_cors(tiny_http::Response::empty(status))?)?;
+        request.respond(with_cors(tiny_http::Response::empty(status), &requested_headers)?)?;
     }
 }
 
 #[cfg(feature = "testing-http")]
-fn with_cors(response: tiny_http::Response<std::io::Empty>) -> Result<tiny_http::Response<std::io::Empty>, Box<dyn std::error::Error + Send + Sync>> {
+fn with_cors(response: tiny_http::Response<std::io::Empty>, allowed_headers: &str) -> Result<tiny_http::Response<std::io::Empty>, Box<dyn std::error::Error + Send + Sync>> {
     let mut response = response;
     for (name, value) in [
         ("Access-Control-Allow-Origin", "*"),
         ("Access-Control-Allow-Methods", "POST, OPTIONS"),
-        ("Access-Control-Allow-Headers", "Content-Type, Authorization"),
+        ("Access-Control-Allow-Headers", allowed_headers),
     ] {
         let header = tiny_http::Header::from_bytes(name.as_bytes(), value.as_bytes())
             .map_err(|_| format!("invalid header {name}"))?;

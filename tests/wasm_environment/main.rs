@@ -17,6 +17,25 @@ use better_logger::SingleNet;
 use better_logger::logger::*;
 #[cfg(feature = "testing-wasm")]
 use better_logger::logger;
+#[cfg(feature = "testing-wasm")]
+use better_logger::RequestSigner;
+#[cfg(feature = "testing-wasm")]
+use better_logger::SignableRequest;
+
+// The signer adds X-Better-Logger-* headers to every network log attempt (retries included)
+// Set "request_signer: None" to test without it
+#[cfg(feature = "testing-wasm")]
+fn test_signer(signable_request: &SignableRequest<'_>) -> Result<Vec<(String, String)>, String> {
+    let attempt_time = match js_sys::Date::new_0().to_iso_string().as_string() {
+        Some(value) => value,
+        None => return Err("could not read the time".to_string()),
+    };
+    return Ok(vec![
+        ("X-Better-Logger-Signed".to_string(), "true".to_string()),
+        ("X-Better-Logger-Body-Length".to_string(), signable_request.body.len().to_string()),
+        ("X-Better-Logger-Attempt-Time".to_string(), attempt_time),
+    ]);
+}
 
 #[cfg(feature = "testing-wasm")]
 fn main() {
@@ -33,6 +52,7 @@ fn main() {
         network_format: NetworkFormat::PlainText, 
         use_bearer_auth: false,
         bearer_auth_key: "".to_string(),
+        request_signer: Some(RequestSigner(test_signer)),
         debug_extra: true,
         async_logging: true,
     };

@@ -10,6 +10,10 @@ pub(crate) mod wasm;
 
 #[cfg(any(feature = "native", feature = "wasm"))]
 pub use interface::settings::LoggerSettings as LoggerSettings;
+#[cfg(any(feature = "native", feature = "wasm"))]
+pub use interface::settings::RequestSigner as RequestSigner;
+#[cfg(any(feature = "native", feature = "wasm"))]
+pub use interface::settings::SignableRequest as SignableRequest;
 #[cfg(any(feature = "relay"))]
 pub use interface::settings::RelaySettings as RelaySettings;
 #[cfg(any(feature = "native", feature = "wasm", feature = "relay"))]

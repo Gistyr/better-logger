@@ -1,7 +1,7 @@
 // better-logger/src/native/networking.rs
 
 #[cfg(feature = "native")]
-use crate::interface::settings::{RUNNING_SETTINGS, CLIENT, NetworkFormat, NetworkEndpointUrl};
+use crate::interface::settings::{RUNNING_SETTINGS, CLIENT, NetworkFormat, NetworkEndpointUrl, SignableRequest, validated_signer_headers};
 #[cfg(feature = "native")]
 use serde_json::json;
 #[cfg(feature = "native")]
@@ -49,26 +49,24 @@ pub(super) fn send_log_line(level: &str, target: &str, message: &str) -> Result<
     let header: String = format!("[{} {} {}]", timestamp, header_level, target);
     let line: String   = format!("{} {}", header, message);
 
-    let mut request = CLIENT.post(url);
+    let (content_type, body, format_name): (&str, String, &str) = match &running_settings.network_format {
+        NetworkFormat::PlainText => ("text/plain; charset=utf-8", line, "PlainText"),
+        NetworkFormat::JsonText { field } => ("application/json; charset=utf-8", json!({ field: line }).to_string(), "JsonText"),
+    };
+
+    let signable_request = SignableRequest { url, content_type, body: &body };
+    let signed_headers = validated_signer_headers(running_settings.request_signer, &signable_request, running_settings.use_bearer_auth)?;
+
+    let mut request = CLIENT.post(url).header("Content-Type", content_type);
     if running_settings.use_bearer_auth == true {
         request = request.header("Authorization", &format!("Bearer {}", running_settings.bearer_auth_key));
     }
-
-    match &running_settings.network_format {
-        NetworkFormat::PlainText => {
-            request
-                .header("Content-Type", "text/plain; charset=utf-8")
-                .send(line) 
-                .map(|_| ())
-                .map_err(|error| format!("network log POST (PlainText) failed: {:?}", error))
-        }
-        NetworkFormat::JsonText { field } => {
-            let payload = json!({ field: line }).to_string();
-            request
-                .header("Content-Type", "application/json; charset=utf-8")
-                .send(payload)
-                .map(|_| ())
-                .map_err(|error| format!("network log POST (JsonText) failed: {:?}", error))
-        }
+    for (header_name, header_value) in &signed_headers {
+        request = request.header(header_name.as_str(), header_value.as_str());
     }
+
+    return request
+        .send(body)
+        .map(|_response| ())
+        .map_err(|error| format!("network log POST ({}) failed: {:?}", format_name, error));
 }
