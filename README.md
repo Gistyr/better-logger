@@ -6,7 +6,7 @@
 ✔️ **File Logging**              
 ✔️ **Network Logging**           
 ✔️ **Auth and Request Signing**      
-✔️ **Relay Server**
+✔️ **Relay Server**     
 ✔️ **Production Ready**              
 # HOW TO USE
 #### If you want to use the `relay` feature, scroll down to **RELAY SERVER** 
@@ -267,17 +267,6 @@ It can output as either option
 - In [actix-web](https://crates.io/crates/actix-web), each worker thread is an independent thread that runs the full Actix runtime.
 - `cors_allowed_origins: vec!["*".into()]` allows all origins.
     - Specify a specific URL to restrict access.
-# 🎉 Contributing
-#### TODO:
-- Validate all user settings in the init function
-- Formatting options for the log messages
-- UDP logging
-- Append option for file logs
-- Native async logging without Tokio
-- Consolidation, optimization
-- Add more network formats
-- Increase `relay` features
-- **This list is not exclusive, all ideas are welcome**
 # License
 &copy; 2026 Gistyr LLC               
 This project, **better-logger**, is dual-licensed under your choice of:
@@ -285,4 +274,3 @@ This project, **better-logger**, is dual-licensed under your choice of:
   See the [LICENSE-APACHE](LICENSE-APACHE) file or view it online at <http://www.apache.org/licenses/LICENSE-2.0>
 - **MIT License**  
   See the [LICENSE-MIT](LICENSE-MIT) file or view it online at <http://opensource.org/licenses/MIT>
-# [betterlogger.dev](https://betterlogger.dev)
